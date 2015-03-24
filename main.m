@@ -124,17 +124,25 @@ if AnalysisType == 3
     % make a vector with the indices of (a) press Aon and (b) pressAoff
     indAStart = find(TC1(:,3) == 1);
     indAEnd = find(TC1(:,3) == 2);
-      
+    
+    % make a vector with the indices of (a) press Bon and (b) pressBoff
+    indBStart = find(TC1(:,3) == -1);
+    indBEnd = find(TC1(:,3) == -2);
+    
     for i = 1: length(indAEnd)
-       tmp1 = TC1(indAStart(i),2); % retrieve time of press Aon
-       tmp2 = TC1(indAEnd(i),2); % retrieve time of press Aoff
-       indAStart2 = round(tmp1/(1/120)); % transform time in sec to frame # (index #)
-       indAEnd2 = round(tmp2/(1/120));
-       timeSeriesTC1(indAStart2:indAEnd2, 2) = 1; % use indices to mark when press Aon (col 2)
+       
+       [indAStartVal, indAEndVal] = findPressInd(indAStart,indAEnd, i, TC1);
+       timeSeriesTC1(indAStartVal:indAEndVal, 2) = 1; % use indices to mark when press Aon (col 2)
+       
+       [indBStartVal, indBEndVal] = findPressInd(indBStart,indBEnd, i, TC1);
+       timeSeriesTC1(indBStartVal:indBEndVal, 3) = 1; % use indices to mark when press Bon (col 3)
     end
     
+    % check that things look okay for simulation 1 (e.g. alternating a(blue) and b(red) presses)
     figure(3)
     plot(timeSeriesTC1(:,1), timeSeriesTC1(:,2), '.');
+    hold on
+    plot(timeSeriesTC1(:,1), timeSeriesTC1(:,3), '.r');
     
     % repeat for TC2
     
