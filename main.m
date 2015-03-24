@@ -11,7 +11,7 @@ close all
 
 %% Constant
 
-AnalysisType = 1; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
+AnalysisType = 3; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
 
 %% Option (1) SINGLE file analysis
@@ -70,9 +70,9 @@ end
 
 if AnalysisType == 3
     TC1=simTC_wJitter(3500,500,4800,800,600,150,20);
-    TC1(:,2)=TC1(:,2)/1000;  
-    TC11 = sortData(TC1);
-    [TimesA1,TimesB1,histA1,histB1] = analyzeTC(TC1, max(TC1(:,2)), 1);
+    TC1(:,2)=TC1(:,2)/1000; % convert time course (col 2) to seconds 
+    TC11 = sortData(TC1); % returns 2 cols, sorted by button press vals (col 2)
+    [TimesA1,TimesB1,histA1,histB1] = analyzeTC(TC1, max(TC1(:,2)), 1); %TimesA1 == 2 cols (time on & off of each press), histA1 == 2 cols (bin vals, # in bin) 
     
     TC2=simTC_wJitter(2000,1000,4000,1600,200,150,20);
     TC2(:,2)=TC2(:,2)/1000; 
@@ -113,26 +113,27 @@ if AnalysisType == 3
     timeMaxTC1 = max(TC1(:,2)); 
     timeMaxTC2 = max(TC2(:,2));
       
-    % make new vector with resolution of 120 Hz
+    % make new timeSeries vector with resolution of 120 Hz
     timeSeriesTC1 = (0:1/120:timeMaxTC1)'; 
     timeSeriesTC2 = (0:1/120:timeMaxTC2)';
     
-    % add a second column of zeros
+    % add a second column of zeros to new timeSeries vector
     timeSeriesTC1(:,2:3) = zeros(size(timeSeriesTC1,1),2);
     timeSeriesTC2(:,2:3) = zeros(size(timeSeriesTC2,1),2);
     
+    % make a vector with the indices of (a) press Aon and (b) pressAoff
     indAStart = find(TC1(:,3) == 1);
     indAEnd = find(TC1(:,3) == 2);
-    
+      
     for i = 1: length(indAEnd)
-       tmp1 = TC1(indAStart(i),2);
-       tmp2 = TC1(indAEnd(i),2);
-       indAStart2 = round(tmp1/(1/120));
+       tmp1 = TC1(indAStart(i),2); % retrieve time of press Aon
+       tmp2 = TC1(indAEnd(i),2); % retrieve time of press Aoff
+       indAStart2 = round(tmp1/(1/120)); % transform time in sec to frame # (index #)
        indAEnd2 = round(tmp2/(1/120));
-       timeSeriesTC1(indAStart2:indAEnd2, 2) = 1; 
+       timeSeriesTC1(indAStart2:indAEnd2, 2) = 1; % use indices to mark when press Aon (col 2)
     end
     
-    figure
+    figure(3)
     plot(timeSeriesTC1(:,1), timeSeriesTC1(:,2), '.');
     
     % repeat for TC2
@@ -152,12 +153,12 @@ if AnalysisType == 3
     [r, lags] = xcorr(TC11(:,1),TC22(:,1));
     [~,I] = max(abs(r)); % find index of row with max correlation coeff
     lagDiff = lags(I); % find lag at that index
-    figure
+    figure(4)
     plot(lags,r)
     
     % correlation
     R = corrcoef(TC11(:,1),TC22(:,1));
-    figure
+    figure(5)
     scatter(TC11(:,1),TC22(:,1), 'r.')
    
 end
