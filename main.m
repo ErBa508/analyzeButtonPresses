@@ -13,7 +13,6 @@ close all
 
 AnalysisType = 3; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
-
 %% Option (1) SINGLE file analysis
 
 if AnalysisType == 1 
@@ -69,15 +68,28 @@ end
 %% Option (3) SIMULATION
 
 if AnalysisType == 3
-    TC1=simTC_wJitter(3500,500,4800,800,600,150,20);
+    
+    %"TC" == 4 col vector: col 1 == count from 1:len(col1); col 2 == time (s) 
+    % of any button press; col 3 == press label (+/- 1, +/- 2); col 4 ==
+    % zeros
+    
+    % simulation 1 %
+       
+    TC1=simTC_wJitter(3500,500,4800,800,600,150,20); % generate a simulated time course
     TC1(:,2)=TC1(:,2)/1000; % convert time course (col 2) to seconds 
-    TC11 = sortData(TC1); % returns 2 cols, sorted by button press vals (col 2)
     [TimesA1,TimesB1,histA1,histB1] = analyzeTC(TC1, max(TC1(:,2)), 1); %TimesA1 == 2 cols (time on & off of each press), histA1 == 2 cols (bin vals, # in bin) 
+    
+    %possibly omit
+    TC11 = sortData(TC1); % returns 2 cols, sorted by button press vals (col 2)
+    
+    % simulation 2 %
     
     TC2=simTC_wJitter(2000,1000,4000,1600,200,150,20);
     TC2(:,2)=TC2(:,2)/1000; 
-    TC22 = sortData(TC2);
     [TimesA2,TimesB2,histA2,histB2] = analyzeTC(TC2, max(TC2(:,2)), 1);
+    
+    %possibly omit
+    TC22 = sortData(TC2);
 end
 
 %% POST-PROCESSING %%%%
@@ -108,43 +120,23 @@ end
 
 if AnalysisType == 3
     
+    %"timeSeries" == 3 col vector: col 1 is time at 120 Hz; col 2 vals == 1 
+    % if A press; col 3 == 1 if B press (zero otherwise)
     
-    % find time of last button press
-    timeMaxTC1 = max(TC1(:,2)); 
-    timeMaxTC2 = max(TC2(:,2));
+    timeSeriesTC1 = simTimeCourseByPress(TC1);
+    
+    timeSeriesTC2 = simTimeCourseByPress(TC2);
       
-    % make new timeSeries vector with resolution of 120 Hz
-    timeSeriesTC1 = (0:1/120:timeMaxTC1)'; 
-    timeSeriesTC2 = (0:1/120:timeMaxTC2)';
-    
-    % add a second column of zeros to new timeSeries vector
-    timeSeriesTC1(:,2:3) = zeros(size(timeSeriesTC1,1),2);
-    timeSeriesTC2(:,2:3) = zeros(size(timeSeriesTC2,1),2);
-    
-    % make a vector with the indices of (a) press Aon and (b) pressAoff
-    indAStart = find(TC1(:,3) == 1);
-    indAEnd = find(TC1(:,3) == 2);
-    
-    % make a vector with the indices of (a) press Bon and (b) pressBoff
-    indBStart = find(TC1(:,3) == -1);
-    indBEnd = find(TC1(:,3) == -2);
-    
-    for i = 1: length(indAEnd)
-       
-       [indAStartVal, indAEndVal] = findPressInd(indAStart,indAEnd, i, TC1);
-       timeSeriesTC1(indAStartVal:indAEndVal, 2) = 1; % use indices to mark when press Aon (col 2)
-       
-       [indBStartVal, indBEndVal] = findPressInd(indBStart,indBEnd, i, TC1);
-       timeSeriesTC1(indBStartVal:indBEndVal, 3) = 1; % use indices to mark when press Bon (col 3)
-    end
-    
     % check that things look okay for simulation 1 (e.g. alternating a(blue) and b(red) presses)
     figure(3)
     plot(timeSeriesTC1(:,1), timeSeriesTC1(:,2), '.');
     hold on
     plot(timeSeriesTC1(:,1), timeSeriesTC1(:,3), '.r');
     
-    % repeat for TC2
+    figure(4)
+    plot(timeSeriesTC2(:,1), timeSeriesTC2(:,2), '.');
+    hold on
+    plot(timeSeriesTC2(:,1), timeSeriesTC2(:,3), '.r');
     
     % then clean-up data; replace overlaps, leave gaps as 0 for now
     
@@ -161,12 +153,12 @@ if AnalysisType == 3
     [r, lags] = xcorr(TC11(:,1),TC22(:,1));
     [~,I] = max(abs(r)); % find index of row with max correlation coeff
     lagDiff = lags(I); % find lag at that index
-    figure(4)
+    figure()
     plot(lags,r)
     
     % correlation
     R = corrcoef(TC11(:,1),TC22(:,1));
-    figure(5)
+    figure()
     scatter(TC11(:,1),TC22(:,1), 'r.')
    
 end
