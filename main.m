@@ -41,6 +41,10 @@ if AnalysisType == 1
         save('keyData.mat','keyData');
     end
     
+    % timeSeriesTC1 == 3 cols (col 1 == time @ 120Hz; col 2 vals == 1 
+    % if A press; col 3 == 1 if B press (zero otherwise))
+    timeSeriesTC1 = simTimeCourseByPress(inputData); 
+    
     % Start analysis function %
     [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData, filename);
     
@@ -72,7 +76,7 @@ end
 if AnalysisType == 3
     
     %"TC" == 4 col vector: col 1 == count from 1:len(col1); col 2 == time (s)
-    % of any button press; col 3 == press label (+/- 1, +/- 2); col 4 ==
+    % of any button press/release; col 3 == press label (+/- 1, +/- 2); col 4 ==
     % zeros
     
     % simulation 1 %
@@ -124,23 +128,11 @@ if AnalysisType == 3
     timeSeriesTC1 = simTimeCourseByPress(TC1);
     
     timeSeriesTC2 = simTimeCourseByPress(TC2);
-      
-    % check that things look okay for simulation 1 (e.g. alternating a(blue) and b(red) presses)
-    figure(3)
-    plot(timeSeriesTC1(:,1), timeSeriesTC1(:,2), '.');
-    hold on
-    plot(timeSeriesTC1(:,1), timeSeriesTC1(:,3), '.r');
     
-    figure(4)
-    plot(timeSeriesTC2(:,1), timeSeriesTC2(:,2), '.');
-    hold on
-    plot(timeSeriesTC2(:,1), timeSeriesTC2(:,3), '.r');
-    
-    % then clean-up data; replace overlaps, leave gaps as 0 for now
-    
-    % then find(Aon and Bon columns both ~= 0) because that should not
-    % happne
-    
+    % clean-up data; replace overlaps, leave gaps as 0 for now
+    timeSeriesTC1 = cleanUpTC(timeSeriesTC1);
+    timeSeriesTC2 = cleanUpTC(timeSeriesTC2);    
+   
     
     % auto-correlation (return best lag(sec) and best normalized r coeff)
     [lagTC1, rTC1] = autocorrelation(timeSeriesTC1(:,2), FR, 'timeSeriesTC1');
