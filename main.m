@@ -13,6 +13,8 @@ close all
 
 AnalysisType = 3; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
+FR = 120; % frame rate
+
 %% Option (1) SINGLE file analysis
 
 if AnalysisType == 1 
@@ -69,27 +71,23 @@ end
 
 if AnalysisType == 3
     
-    %"TC" == 4 col vector: col 1 == count from 1:len(col1); col 2 == time (s) 
+    %"TC" == 4 col vector: col 1 == count from 1:len(col1); col 2 == time (s)
     % of any button press; col 3 == press label (+/- 1, +/- 2); col 4 ==
     % zeros
     
     % simulation 1 %
-       
-    TC1=simTC_wJitter(3500,500,4800,800,600,150,20); % generate a simulated time course
-    TC1(:,2)=TC1(:,2)/1000; % convert time course (col 2) to seconds 
-    [TimesA1,TimesB1,histA1,histB1] = analyzeTC(TC1, max(TC1(:,2)), 1); %TimesA1 == 2 cols (time on & off of each press), histA1 == 2 cols (bin vals, # in bin) 
     
-    %possibly omit
-    TC11 = sortData(TC1); % returns 2 cols, sorted by button press vals (col 2)
+    TC1=simTC_wJitter(3500,500,4800,800,600,150,20); % generate a simulated time course
+    TC1(:,2)=TC1(:,2)/1000; % convert time course (col 2) to seconds
+    [TimesA1,TimesB1,histA1,histB1] = analyzeTC(TC1, max(TC1(:,2)), 1); %TimesA1 == 2 cols (time on & off of each press), histA1 == 2 cols (bin vals, # in bin)
+    
     
     % simulation 2 %
     
     TC2=simTC_wJitter(2000,1000,4000,1600,200,150,20);
-    TC2(:,2)=TC2(:,2)/1000; 
+    TC2(:,2)=TC2(:,2)/1000;
     [TimesA2,TimesB2,histA2,histB2] = analyzeTC(TC2, max(TC2(:,2)), 1);
     
-    %possibly omit
-    TC22 = sortData(TC2);
 end
 
 %% POST-PROCESSING %%%%
@@ -143,22 +141,16 @@ if AnalysisType == 3
     % then find(Aon and Bon columns both ~= 0) because that should not
     % happne
     
+    
+    % auto-correlation (return best lag(sec) and best normalized r coeff)
+    [lagTC1, rTC1] = autocorrelation(timeSeriesTC1(:,2), FR, 'timeSeriesTC1');
+    %[lagTC2, rTC2] = autocorrelation(timeSeriesTC2(:,2), FR, 'timeSeriesTC1');
 
-    
-    
-    
-    
-    
-    % cross-correlation analysis http://www.mathworks.com/help/signal/ref/xcorr.html#bucjo5f
-    [r, lags] = xcorr(TC11(:,1),TC22(:,1));
-    [~,I] = max(abs(r)); % find index of row with max correlation coeff
-    lagDiff = lags(I); % find lag at that index
-    figure()
-    plot(lags,r)
-    
-    % correlation
-    R = corrcoef(TC11(:,1),TC22(:,1));
-    figure()
-    scatter(TC11(:,1),TC22(:,1), 'r.')
-   
+       
+    % cross-correlation analysis (return best lag(sec), best norm r-coeff,
+    % r-coeff at 0 sec lag (xcorr), r-coeff at 0 sec lag (corrcoef)
+    [lagA, rA, rA0_1, rA0_2] = crossCorrelation(timeSeriesTC1(:,2), timeSeriesTC2(:,2), FR, 'press A');
+    [lagB, rB, rB0_1, rB0_2] = crossCorrelation(timeSeriesTC1(:,3), timeSeriesTC2(:,3), FR, 'press B');
+      
+  
 end
