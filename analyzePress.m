@@ -1,5 +1,6 @@
 function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData, filename)
 
+keyboard
 %% Constants
 
 plot_yn = 1;
@@ -107,7 +108,7 @@ histB = [bins' histB];
 tmpmin = min(gapOverlap(:,1));
 tmpmax = max(gapOverlap(:,1));
 
-binw2 = (tmpmin+tmpmax)/6;
+binw2 = (abs(tmpmin)+tmpmax)/6;
 
 bins2 = tmpmin: binw2: tmpmax;
 if bins2(end) < tmpmax
@@ -121,4 +122,4 @@ bar(bins2, hist, 'EdgeColor', colorA, 'FaceColor', colorA)
 str = sprintf('Gaps(+) and overlaps(-);\n Bin width %.2f s and and no bin shift\n Mean gap/overlap = %.3f s', binw2, meanGapOverlap);
 title(str)
 
-keyboard
+
