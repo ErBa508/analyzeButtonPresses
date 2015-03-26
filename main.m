@@ -15,16 +15,30 @@ AnalysisType = 1; %if single file analysis = 1; if batch analysis = 2; if simula
 
 FR = 120; % frame rate
 
+plot_yn = 1; % if want to see summary plots (1 if yes, 0 if no)
+
 %% Option (1) SINGLE file analysis
 
 if AnalysisType == 1 
     
-    % Select data %
+    %%%%%%%%%%%%%%%%%%%
+    %%% Select data %%%
+    %%%%%%%%%%%%%%%%%%%
+    
     % use text files that are identical whether using eye tracker or not
     % if eye tracker data are compared, need to determine clock offset to sync data
     
     [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2013 ButtonPress dat files\*.dat', 'Pick a .dat data file');
-    inputData = importdata(strcat(pathname, filename));
+    
+    % rawData =
+    % column 1 = count from 1 : length(column 2)
+    % column 2 = time of left/right button press/release
+    % column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
+    rawData = importdata(strcat(pathname, filename));
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Save data to mat file %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % See if data already saved to mat file %
     load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
@@ -37,16 +51,35 @@ if AnalysisType == 1
     % Save data to mat file %
     if sum(fileRepeat) < 1
         keyData.subjects(1, L + 1).name = filename;
-        keyData.subjects(1, L + 1).data = inputData;
+        keyData.subjects(1, L + 1).data = rawData;
         save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
     end
     
-    % timeSeriesTC1 == 3 cols (col 1 == time @ 120Hz; col 2 vals == 1 
-    % if A press; col 3 == 1 if B press (zero otherwise))
-    timeSeriesTC1 = genTimeSeries(inputData,FR); 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Generate press time series %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % Start analysis function %
-    [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData, filename);
+    % timeSeriesTC1 =
+    % column 1 = time at 120 Hz
+    % column 2 = label of A events; Aon = 1, Aoff = 0
+    % column 3 = label of B events; Bon = 1, Boff = 0
+    timeSeriesTC1 = genTimeSeries(rawData,FR); 
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Summarize and visualize time series pre-clean-up %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % Summarize gap and overlap data with plots %
+    [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = summarizeData(timeSeriesTC1, filename, plot_yn);
+    %[gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(rawData, filename);
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Clean-up gaps and overlaps %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Summarize and visualize time series POST-clean-up %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 %% Option (2) BATCH analysis    
 elseif AnalysisType == 2 %if > 0 then run batch analysis
@@ -55,9 +88,9 @@ elseif AnalysisType == 2 %if > 0 then run batch analysis
     %load('keyRes.mat');
     
     for i = 1 : length(keyData.subjects)
-        clear inputData; clear gapOverlap; % clear data from prev loop
-        inputData = keyData.subjects(1,i).data;
-        [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData,  keyData.subjects(i).name);
+        clear rawData; clear gapOverlap; % clear data from prev loop
+        rawData = keyData.subjects(1,i).data;
+        [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(rawData,  keyData.subjects(i).name);
         
         % save key press RESULTS to different .mat file %
         keyRes.subjects(1,i).name = keyData.subjects(1, i).name; %save filename
