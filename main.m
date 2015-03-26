@@ -11,7 +11,7 @@ close all
 
 %% Constant
 
-AnalysisType = 3; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
+AnalysisType = 1; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
 FR = 120; % frame rate
 
@@ -38,12 +38,12 @@ if AnalysisType == 1
     if sum(fileRepeat) < 1
         keyData.subjects(1, L + 1).name = filename;
         keyData.subjects(1, L + 1).data = inputData;
-        save('keyData.mat','keyData');
+        save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
     end
     
     % timeSeriesTC1 == 3 cols (col 1 == time @ 120Hz; col 2 vals == 1 
     % if A press; col 3 == 1 if B press (zero otherwise))
-    timeSeriesTC1 = simTimeCourseByPress(inputData); 
+    timeSeriesTC1 = simTimeCourseByPress(inputData,FR); 
     
     % Start analysis function %
     [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData, filename);
@@ -51,7 +51,7 @@ if AnalysisType == 1
 %% Option (2) BATCH analysis    
 elseif AnalysisType == 2 %if > 0 then run batch analysis
 
-    load('keyData.mat');
+    load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
     %load('keyRes.mat');
     
     for i = 1 : length(keyData.subjects)
@@ -64,7 +64,7 @@ elseif AnalysisType == 2 %if > 0 then run batch analysis
         keyRes.subjects(1,i).gap = gapOverlap; %save gaps/overlaps values
         keyRes.subjects(1,i).results(1) = meanGapOverlap; %save single val results in results bin
         keyRes.subjects(1,i).results(2) = stdGapOverlap;
-        save('keyRes.mat','keyRes');
+        save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyRes.mat','keyRes');
         
         %pause % to view histogram and plot for each subject
     end
@@ -98,7 +98,9 @@ end
 
 %% Evaluate group data if real data
 
-if AnalysisType == 1 || AnalysisType == 2
+if AnalysisType == 2
+    
+    load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyRes.mat','keyRes');
     
     for i = 1 : length(keyData.subjects)
         groupMeanGap(i,1) = keyRes.subjects(1,i).results(1);
@@ -125,9 +127,9 @@ if AnalysisType == 3
     %"timeSeries" == 3 col vector: col 1 is time at 120 Hz; col 2 vals == 1 
     % if A press; col 3 == 1 if B press (zero otherwise)
     
-    timeSeriesTC1 = simTimeCourseByPress(TC1);
+    timeSeriesTC1 = simTimeCourseByPress(TC1,FR);
     
-    timeSeriesTC2 = simTimeCourseByPress(TC2);
+    timeSeriesTC2 = simTimeCourseByPress(TC2,FR);
     
     % clean-up data; replace overlaps, leave gaps as 0 for now
     timeSeriesTC1 = cleanUpTC(timeSeriesTC1);

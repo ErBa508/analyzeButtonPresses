@@ -1,10 +1,10 @@
-function [timeSeries] = simTimeCourseByPress(TC)
+function [timeSeries] = simTimeCourseByPress(TC,FR)
 
-% find time of last button press
+% find time of last button press/release
  timeMaxTC = max(TC(:,2)); 
  
  % make new timeSeries vector with resolution of 120 Hz
- timeSeries = (0:1/120:timeMaxTC)'; 
+ timeSeries = (0:1/FR:timeMaxTC)'; 
  
  % add a second column of zeros to new timeSeries vector
  timeSeries(:,2:3) = zeros(size(timeSeries,1),2);
