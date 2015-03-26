@@ -1,4 +1,4 @@
-function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData, filename)
+function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(rawData, filename)
 
 keyboard
 %% Constants
@@ -31,15 +31,15 @@ minItemsPerBin = 4;
 
 %% Assign to vectors the time of each respective button event
 
-vecAon = inputData(inputData(:,colKey)== keyAon, colTime);
-vecAoff = inputData(inputData(:,colKey)== keyAoff, colTime);
-vecBon = inputData(inputData(:,colKey)== keyBon, colTime);
-vecBoff = inputData(inputData(:,colKey)== keyBoff, colTime);
+vecAon = rawData(rawData(:,colKey)== keyAon, colTime);
+vecAoff = rawData(rawData(:,colKey)== keyAoff, colTime);
+vecBon = rawData(rawData(:,colKey)== keyBon, colTime);
+vecBoff = rawData(rawData(:,colKey)== keyBoff, colTime);
 
 %% Clean-up for unequal # presses and releases of a button
 
 % Tmax
-Tmax = max(inputData(:,colTime));
+Tmax = max(rawData(:,colTime));
 
 [vecAon, vecAoff, vecBon, vecBoff] = lastDuration(vecAon, vecAoff, vecBon, vecBoff, Tmax, epsilon);
 
