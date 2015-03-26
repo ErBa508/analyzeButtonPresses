@@ -1,4 +1,4 @@
-function [timeSeries] = simTimeCourseByPress(TC,FR)
+function [timeSeries] = genTimeSeries(TC,FR)
 
 % find time of last button press/release
  timeMaxTC = max(TC(:,2)); 

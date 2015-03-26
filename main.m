@@ -43,7 +43,7 @@ if AnalysisType == 1
     
     % timeSeriesTC1 == 3 cols (col 1 == time @ 120Hz; col 2 vals == 1 
     % if A press; col 3 == 1 if B press (zero otherwise))
-    timeSeriesTC1 = simTimeCourseByPress(inputData,FR); 
+    timeSeriesTC1 = genTimeSeries(inputData,FR); 
     
     % Start analysis function %
     [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(inputData, filename);
@@ -127,9 +127,9 @@ if AnalysisType == 3
     %"timeSeries" == 3 col vector: col 1 is time at 120 Hz; col 2 vals == 1 
     % if A press; col 3 == 1 if B press (zero otherwise)
     
-    timeSeriesTC1 = simTimeCourseByPress(TC1,FR);
+    timeSeriesTC1 = genTimeSeries(TC1,FR);
     
-    timeSeriesTC2 = simTimeCourseByPress(TC2,FR);
+    timeSeriesTC2 = genTimeSeries(TC2,FR);
     
     % clean-up data; replace overlaps, leave gaps as 0 for now
     timeSeriesTC1 = cleanUpTC(timeSeriesTC1);
