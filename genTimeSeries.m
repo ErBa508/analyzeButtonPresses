@@ -22,7 +22,7 @@ function [timeSeries] = genTimeSeries(TC,FR)
  % released when trial ended. This will make lengths of ind_ON vs ind_OFF
  % unequal. We can fix that by adding a dummy "off" press in last frame of
  % the trial (we add this new event to the time course (TC)).
- [indA_ON, indA_OFF, indB_ON, indB_OFF, TC] = lastDuration(indA_ON, indA_OFF, indB_ON, indB_OFF, TC, timeMaxTS);
+ [indA_OFF, indB_OFF, TC] = addLastRelease(indA_ON, indA_OFF, indB_ON, indB_OFF, TC, timeMaxTS);
  
  % loop through vector of keypress indices to get frames where start  
  % press and end press. Then mark all frames in between as the corresponding
@@ -35,5 +35,5 @@ function [timeSeries] = genTimeSeries(TC,FR)
      [indBStartVal, indBEndVal] = findPressInd(indB_ON,indB_OFF, i, TC, FR);
      timeSeries(indBStartVal:indBEndVal, 3) = 1; % use indices to mark when press Bon (col 3)
  end
- 
+ %keyboard
  
