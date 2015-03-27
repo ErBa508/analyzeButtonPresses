@@ -1,5 +1,7 @@
 function [timeSeries] = genTimeSeries(TC,FR)
 
+ %keyboard
+
  % find time of last button press/release
  timeMaxTC = max(TC(:,2)); 
  
@@ -31,7 +33,9 @@ function [timeSeries] = genTimeSeries(TC,FR)
      
      [indAStartVal, indAEndVal] = findPressInd(indA_ON,indA_OFF, i, TC, FR);
      timeSeries(indAStartVal:indAEndVal, 2) = 1; % use indices to mark when press Aon (col 2)
-     
+ end
+ 
+ for i = 1: length(indB_OFF)
      [indBStartVal, indBEndVal] = findPressInd(indB_ON,indB_OFF, i, TC, FR);
      timeSeries(indBStartVal:indBEndVal, 3) = 1; % use indices to mark when press Bon (col 3)
  end
