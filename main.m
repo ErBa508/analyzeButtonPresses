@@ -70,16 +70,22 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % Summarize gap and overlap data with plots %
-    [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = summarizeData(timeSeriesTC1, filename, plot_yn);
+    [gapOverlap_pre, meanGapOverlap_pre, stdGapOverlap_pre, durA_pre, durB_pre] = summarizeData(timeSeriesTC1, filename, plot_yn);
     %[gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(rawData, filename);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Clean-up gaps and overlaps %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
+    % clean-up data; replace overlaps, leave gaps as 0 for now
+    timeSeriesTC1 = cleanUpTC(timeSeriesTC1);
+        
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series POST-clean-up %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % Summarize gap and overlap data with plots %
+    [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post] = summarizeData(timeSeriesTC1, filename, plot_yn);
     
 %% Option (2) BATCH analysis    
 elseif AnalysisType == 2 %if > 0 then run batch analysis
