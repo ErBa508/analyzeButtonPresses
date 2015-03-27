@@ -7,6 +7,11 @@ Date ended: ACTIVE
 This project analyzes the timing of alternating mouse button presses 
 (right/left or a/b) made in response to a bi-stable visual stimulus.
 
+main.m will (1) get data, (2) generate a button press time series, (3) summarize
+and visualize the time series pre-clean-up, (4) clean-up gaps and overlaps in
+button presses, (5) summarize and visualize time series post-clean-up, and (6)
+analyze the time series data.
+
 ## Motivation
 
 Analyze the responses of experimental subjects in a vision science
@@ -31,28 +36,79 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 1. GENERATE DATA: 
 - **simTC_wJitter.m** - simulate pseudo-random button press time course 
 (Written by NR)
+- NB: behavioral data is imported via main.m
 
 2. CLEAN DATA: 
 
-- **lastDuration.m** - return button press vectors of equal length
-after accounting for last button press of trial (Written by NR)
-- **sortData.m** - POSSIBLY DELETE - simple sorting function (Written by EB) 
-- **cleanUpTC.m**
-- **simTimeCourseByPress.m** -
-
-3. SUMMARIZE DATA:
-
-- **analyzePress.m** - SHOULD BE "summarizePressData.m"
-    - INPUT: inputData, filename = string
-    	- inputData (3 columns)
+- **genTimeSeries.m** -
+	- SUMMARY: raw data is in the format of a column of mouse press/release 
+	events and needs to be converted to continuous time series format
+	- INPUT: rawData, framerate (#)
+    	- rawData (3 columns)
     		- column 1 = count from 1 : length(column 2)
     		- column 2 = time of left/right button press/release
     		- column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
-    - OUTPUT: gapOverlap, meanGapOverlap = #, stdGapOverlap = #, durA, durB
+	- OUTPUT: timeSeries (3 columns)
+			- column 1 = time at 120 Hz
+			- column 2 = label of A events; Aon = 1, Aoff = 0
+			- column 3 = label of B events; Bon = 1, Boff = 0
+	- (Written by EB in conjunction with NR)
+
+- **addLastRelease.m** - 
+	- SUMMARY: sometimes a button is still pressed at the end of a trial; this 
+	function adds a dummy 'release' to the last frame of the trial; the 
+	function returns button press vectors of equal length
+	- INPUT: vecAon, vecAoff, vecBon, vecBoff, TC, timeMaxTS(#)
+		- vecAon/vecAoff/vecBon/vecBoff (1 column)
+			- column 1 = indices of that button event in TC
+		- TC (3 columns) == rawData (see above)
+	- OUTPUT: vecAoff, vecBoff, TC
+		- vecAoff/vecBoff (1 column)
+			- column 1 = indices of that button event in TC, plus one additional
+			index for either vecAoff or vecBoff (in effect, to add last release)
+		- TC (3 columns) - new row added at end
+			- column 1 = last cell set as len(col) + 1
+			- column 2 = last cell set as timeMaxTS (last timestamp in trial)
+			- column 3 = last cell set equal to either 2 (if add last release to 
+			vecAoff) or -2 (if add last release to vecBoff)
+	- (Written by EB adapted from NR's 'analyzeTC.m')
+
+- **findPressInd.m** -	
+	- SUMMARY: the time series vector needs to be labeled with the corresponding 
+	button press events. Events are labeled for each frame with a 1 if the button
+	was pressed or 0 if a button was not pressed (press A = column 2; press B = 
+	column 3). This function finds the times when a button was pressed 
+	(pressOn) and released (pressOff) and returns the index of the nearest frame
+	at 120Hz.
+	- INPUT: vecPressOn, vecPressOff, i (#), TC, FR(#)
+		- vecPressOn (1 column)
+			- column 1 = indices of that button event (see vecAon, vecBon)
+		- vecPressOff (1 column)
+			- column 1 = indices of that button event (see vecAoff, vecBoff)
+		- TC (3 columns) == rawData (see above)
+	- OUTPUT: indStart (#), indEnd (#)
+	- (Written by EB in conjunction with NR)
+
+- **sortData.m** - POSSIBLY DELETE - simple sorting function (Written by EB) 
+- **cleanUpTC.m**
+
+
+3. SUMMARIZE DATA:
+
+- **summarizeData.m** - 
+	- SUMMARY: this function takes the timeSeries data (button press as a 
+	function of time at 120 Hz) and returns (1) the length of each gap/overlap
+	between press A and B and (2) the duration of each press
+    - INPUT: TS, filename (string), plot_yn (#)
+    	- TS (3 columns) (== timeSeries, see above)
+			- column 1 = time at 120 Hz
+			- column 2 = label of A events; Aon = 1, Aoff = 0
+			- column 3 = label of B events; Bon = 1, Boff = 0
+    - OUTPUT: gapOverlap, meanGapOverlap (#), stdGapOverlap (#), durA, durB
     	- gapOverlap (2 columns)
     		- column 1 = duration of each gap ('pos' #) or overlap ('neg' #)
     		- column 2 = label of each event; A to B = -2; B to A = 2; 
-    		repeat press = 0
+    		repeat button (same press) = 0
     	- durA (1 column)
     		- column 1 = duration of each A press
     	- durB (1 column)
@@ -60,7 +116,7 @@ after accounting for last button press of trial (Written by NR)
 	- (Written by EB, adapted from 'analyzeTC.m' written by NR)
 - **analyzeTC.m** - returns timestamps of button presses (Written by NR)
 
-- **findPressInd.m** -
+
 
 4. VISUALIZE DATA:
 - **plotTC.m** - plot time course of button presses (Written by NR)
