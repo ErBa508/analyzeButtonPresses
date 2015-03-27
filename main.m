@@ -24,16 +24,8 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%
     %%% Select data %%%
     %%%%%%%%%%%%%%%%%%%
-    
-    % use text files that are identical whether using eye tracker or not
-    % if eye tracker data are compared, need to determine clock offset to sync data
-    
+      
     [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2013 ButtonPress dat files\*.dat', 'Pick a .dat data file');
-    
-    % rawData =
-    % column 1 = count from 1 : length(column 2)
-    % column 2 = time of left/right button press/release
-    % column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
     rawData = importdata(strcat(pathname, filename));
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,11 +50,7 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Generate press time series %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    % timeSeriesTC1 =
-    % column 1 = time at 120 Hz
-    % column 2 = label of A events; Aon = 1, Aoff = 0
-    % column 3 = label of B events; Bon = 1, Boff = 0
+
     timeSeriesTC1 = genTimeSeries(rawData,FR); 
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,20 +59,17 @@ if AnalysisType == 1
     
     % Summarize gap and overlap data with plots %
     [gapOverlap_pre, meanGapOverlap_pre, stdGapOverlap_pre, durA_pre, durB_pre] = summarizeData(timeSeriesTC1, filename, plot_yn);
-    %[gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = analyzePress(rawData, filename);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Clean-up gaps and overlaps %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % clean-up data; replace overlaps, leave gaps as 0 for now
     timeSeriesTC1 = cleanUpTC(timeSeriesTC1);
         
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series POST-clean-up %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    % Summarize gap and overlap data with plots %
+
     [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post] = summarizeData(timeSeriesTC1, filename, plot_yn);
     
 %% Option (2) BATCH analysis    

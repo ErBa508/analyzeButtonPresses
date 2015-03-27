@@ -8,7 +8,7 @@ This project analyzes the timing of alternating mouse button presses
 (right/left or a/b) made in response to a bi-stable visual stimulus.
 
 main.m will (1) get data, (2) generate a button press time series, (3) summarize
-and visualize the time series pre-clean-up, (4) clean-up gaps and overlaps in
+and visualize the time series pre-clean-up, (4) clean-up overlaps (not yet gaps) in
 button presses, (5) summarize and visualize time series post-clean-up, and (6)
 analyze the time series data.
 
@@ -19,7 +19,9 @@ experiment.
 
 ## TODO
 
-- check quality of clean-up code on "data file testN Gerald 2.dat"
+- fix code in section 2 and 3 AnalysisTypes
+- develop analysis section for dominance durations
+- clean-up gaps
 
 ## Important files
 
@@ -91,6 +93,17 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 
 - **sortData.m** - POSSIBLY DELETE - simple sorting function (Written by EB) 
 - **cleanUpTC.m**
+	- SUMMARY: Find indices when col2 and col3 of TS are both pressed (==1).
+	Loop backward (check last overlap 1st). If 1 frame after that overlap for
+	pressA is equal to zero, change that overlap frame for pressA to zero. Else,
+	pressB for that overlap frame is changed to zero. 
+	- INPUT: TS (== timeSeries, see above)
+	- OUTPUT: TS (3 columns)
+		- column 1 = no change
+		- column 2 = change 1's to 0's for press A if meets conditions in summary
+		- column 3 = change 1's to 0's for press B if meets conditions in summary
+	- (Written by EB)
+	- NB: TO-Do; this function clean-ups overlaps but not gaps
 
 
 3. SUMMARIZE DATA:
@@ -115,7 +128,6 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
     		- column 1 = duration of each B press
 	- (Written by EB, adapted from 'analyzeTC.m' written by NR)
 - **analyzeTC.m** - returns timestamps of button presses (Written by NR)
-
 
 
 4. VISUALIZE DATA:
