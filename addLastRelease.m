@@ -3,12 +3,13 @@ function [vecAoff, vecBoff, TC] = addLastRelease(vecAon, vecAoff, vecBon, vecBof
 %keyboard
 
 len_TC = length(TC(:,1));
-TC(len_TC + 1, 1) = len_TC + 1; % add new index to time course column 1
-TC(len_TC + 1, 2) = timeMaxTS; % set last 'press' in column 2 to last frame of time series
 
 % Button A
 if (length(vecAon)-length(vecAoff))==1 %end of trial occurred during Aon
     vecAoff(length(vecAoff)+1) = vecAon(length(vecAon)) + 1;   % add new index to vecAoff
+    % add new row to TC
+    TC(len_TC + 1, 1) = len_TC + 1; % add new index to time course column 1
+    TC(len_TC + 1, 2) = timeMaxTS; % set last 'press' in column 2 to last frame of time series
     TC(len_TC + 1, 3) = 2; % set event label in column 3 to Aoff
 else
     if (length(vecAon)~=length(vecAoff)) %if end of trial was during Aoff,
@@ -25,6 +26,9 @@ end
 % Button B
 if (length(vecBon)-length(vecBoff))==1
     vecBoff(length(vecBoff)+1)= vecBon(length(vecBon)) + 1; % add new index to vecBoff
+    % add new row to TC
+    TC(len_TC + 1, 1) = len_TC + 1; % add new index to time course column 1
+    TC(len_TC + 1, 2) = timeMaxTS; % set last 'press' in column 2 to last frame of time series
     TC(len_TC + 1, 3) = -2; % set event label in column 3 to Boff
 else
     if (length(vecBon)~=length(vecBoff))
