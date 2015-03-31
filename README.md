@@ -19,8 +19,8 @@ experiment.
 
 ## TODO
 
-- fix code in section 2 and 3 AnalysisTypes
 - develop analysis section for dominance durations
+- clean-up plots
 - clean-up gaps
 
 ## Important files
@@ -36,8 +36,20 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 ## Supporting functions 
 
 1. GENERATE DATA: 
-- **simTC_wJitter.m** - simulate pseudo-random button press time course 
-(Written by NR)
+- **simTC_wJitter.m** - simulate pseudo-random button press time course
+	- SUMMARY: Simulates pseudo-random time-course of alternations between percept 
+	A and B. Percept durations are drawn from a log-normal distribution.
+	- INPUT: meanAmsec, stdAmsec, meanBmsec, stdBmsec, meanRT, RTj, N
+		- The average ('mean') and std of percepts A and B are specified independently
+		- meanRT = mean reaction time 
+		- RTj = jitter in reaction time (standard deviation)
+		- N = number of simulated durations for each percept
+	- OUTPUT: 
+		- simTC (3 columns)
+		    - column 1 = count from 1 : length(column 2)
+    		- column 2 = time of left/right button press/release
+    		- column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; 
+	- (Written by NR)
 - NB: behavioral data is imported via main.m
 
 2. CLEAN DATA: 
@@ -92,7 +104,7 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 	- (Written by EB in conjunction with NR)
 
 - **sortData.m** - POSSIBLY DELETE - simple sorting function (Written by EB) 
-- **cleanUpTC.m**
+- **cleanUpTS.m**
 	- SUMMARY: Find indices when col2 and col3 of TS are both pressed (==1).
 	Loop backward (check last overlap 1st). If 1 frame after that overlap for
 	pressA is equal to zero, change that overlap frame for pressA to zero. Else,
