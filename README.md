@@ -1,8 +1,8 @@
-## Project - AnalyzeButtonPresses
+# Project - AnalyzeButtonPresses
 Date started: April 2014
 Date ended: ACTIVE
 
-## Synopsis
+# Synopsis
 
 This project analyzes the timing of alternating mouse button presses 
 (right/left or a/b) made in response to a bi-stable visual stimulus.
@@ -12,30 +12,30 @@ and visualize the time series pre-clean-up, (4) clean-up overlaps (not yet gaps)
 button presses, (5) summarize and visualize time series post-clean-up, and (6)
 analyze the time series data.
 
-## Motivation
+# Motivation
 
 Analyze the responses of experimental subjects in a vision science
 experiment.
 
-## TODO
+# TODO
 
 - develop analysis section for dominance durations
 - clean-up plots
 - clean-up gaps
 
-## Important files
+# Important files
 
 - **main.m** - entry point for running analysis script (Written by EB) 
 
-## Short instructions 
+# Short instructions 
 
 Open main.m and modify the value of the variable "AnalysisType". Set equal to 
 1 to analyze a single .dat file. Set equal to 2 to analyze all subject data 
 saved in keyData.mat. Set equal to 3 to analyze simulated dataset. 
 
-## Supporting functions 
+# Supporting functions 
 
-1. GENERATE DATA: 
+## GENERATE DATA: 
 
 - **simTC_wJitter.m** - simulate pseudo-random button press time course
 	- SUMMARY: Simulates pseudo-random time-course of alternations between percept 
@@ -53,7 +53,7 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 	- (Written by NR)
 - NB: behavioral data is imported via main.m
 
-2. CLEAN DATA: 
+## CLEAN DATA: 
 
 - **genTimeSeries.m** -
 	- SUMMARY: raw data is in the format of a column of mouse press/release 
@@ -118,7 +118,7 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 	- (Written by EB)
 	- NB: TO-Do; this function clean-ups overlaps but not gaps
 
-3. SUMMARIZE DATA:
+## SUMMARIZE DATA:
 
 - **summarizeData.m** - 
 	- SUMMARY: this function takes the timeSeries data (button press as a 
@@ -141,13 +141,13 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 	- (Written by EB, adapted from 'analyzeTC.m' written by NR)
 - **analyzeTC.m** - returns timestamps of button presses (Written by NR)
 
-4. VISUALIZE DATA:
+## VISUALIZE DATA:
 
 - **plotTC.m** - plot time course of button presses (Written by NR)
 - **histogramPrep.m** - return hist vectors for mouse press durations 
 (Written by EB, adapted from NR)
 
-5. ANALYZE DATA:
+## ANALYZE DATA:
 
 - **crossCorrelation.m**
 - **autocorrelation.m**
