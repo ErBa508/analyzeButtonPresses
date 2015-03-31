@@ -36,6 +36,7 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 ## Supporting functions 
 
 1. GENERATE DATA: 
+
 - **simTC_wJitter.m** - simulate pseudo-random button press time course
 	- SUMMARY: Simulates pseudo-random time-course of alternations between percept 
 	A and B. Percept durations are drawn from a log-normal distribution.
@@ -117,7 +118,6 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 	- (Written by EB)
 	- NB: TO-Do; this function clean-ups overlaps but not gaps
 
-
 3. SUMMARIZE DATA:
 
 - **summarizeData.m** - 
@@ -141,12 +141,13 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 	- (Written by EB, adapted from 'analyzeTC.m' written by NR)
 - **analyzeTC.m** - returns timestamps of button presses (Written by NR)
 
-
 4. VISUALIZE DATA:
+
 - **plotTC.m** - plot time course of button presses (Written by NR)
 - **histogramPrep.m** - return hist vectors for mouse press durations 
 (Written by EB, adapted from NR)
 
 5. ANALYZE DATA:
+
 - **crossCorrelation.m**
 - **autocorrelation.m**
