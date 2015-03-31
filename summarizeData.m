@@ -1,5 +1,6 @@
 function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = summarizeData(TS, filename, plot_yn)
 
+%keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Summarize gaps and overlaps %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -10,10 +11,16 @@ function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = summarizeData
 switchA = (TS(1:end-1,2) + TS(2:end,2)); % cell == 1 is one frame before switch
 indA = find(switchA == 1); % # of indices should be == # of gapOverlap
 timesA = TS(indA+1); % time when button pressed/released; '+ 1' because ind is one frame before switch
+if mod(length(timesA),2) == 1 % if button A was still pressed in last frame, add timestamp of last frame to timesA (for Aoff)
+    timesA(length(timesA)+1,1) =  max(TS(:,1));
+end
 
 switchB = (TS(1:end-1,3) + TS(2:end,3)); % cell == 1 is one frame before switch
 indB = find(switchB == 1); % # of indices should be == # of gapOverlap
 timesB = TS(indB+1); % time when button pressed/released; '+ 1' because ind is one frame before switch
+if mod(length(timesB),2) == 1 % if button B was still pressed in last frame, add timestamp of last frame to timesA (for Boff)
+    timesB(length(timesB)+1,1) =  max(TS(:,1));
+end
 
 % split into 2 columns depending on whether button is pressed or released
 timesA_split(:,1) = timesA(1:2:end); % Aon
