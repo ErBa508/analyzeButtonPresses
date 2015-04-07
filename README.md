@@ -123,13 +123,13 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
 - **summarizeData.m** - 
 	- SUMMARY: this function takes the timeSeries data (button press as a 
 	function of time at 120 Hz) and returns (1) the length of each gap/overlap
-	between press A and B and (2) the duration of each press
+	between press A and B, (2) the duration of each press, and (3) the # of press switches
     - INPUT: TS, filename (string), plot_yn (#)
     	- TS (3 columns) (== timeSeries, see above)
 			- column 1 = time at 120 Hz
 			- column 2 = label of A events; Aon = 1, Aoff = 0
 			- column 3 = label of B events; Bon = 1, Boff = 0
-    - OUTPUT: gapOverlap, meanGapOverlap (#), stdGapOverlap (#), durA, durB
+    - OUTPUT: gapOverlap, meanGapOverlap (#), stdGapOverlap (#), durA, durB, numSwitch (#)
     	- gapOverlap (2 columns)
     		- column 1 = duration of each gap ('pos' #) or overlap ('neg' #)
     		- column 2 = label of each event; A to B = -2; B to A = 2; 
@@ -139,6 +139,13 @@ saved in keyData.mat. Set equal to 3 to analyze simulated dataset.
     	- durB (1 column)
     		- column 1 = duration of each B press
 	- (Written by EB, adapted from 'analyzeTC.m' written by NR)
+- **deriveVars.m** -
+	- SUMMARY: this function inputs the timeSeries data and returns (1) the % time of 
+	percept A and B, (2) the mean dominance durations of press A and B, (3) the reaction 
+	time to the first button press (s), and (4) the rate of button press alternations (s)
+	- INPUT: TS (see TS above), numSwitches (#), domDurA (see durA above), domDurB (durB above)
+	- OUTPUT: relA (#), relB (#), meanDurA (#), meanDurB (#), RT (#), altRate (#)
+	- (Written by EB)
 - **analyzeTC.m** - returns timestamps of button presses (Written by NR)
 
 ## VISUALIZE DATA:
