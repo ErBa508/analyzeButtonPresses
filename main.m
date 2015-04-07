@@ -17,7 +17,7 @@ close all
 %% CONSTANTS %%
 %%%%%%%%%%%%%%%
 
-AnalysisType = 2; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
+AnalysisType = 1; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
 FR = 120; % frame rate
 
@@ -93,7 +93,13 @@ end
 
 for i = 1 : numFiles
     
-    if AnalysisType == 2      
+    if AnalysisType == 1
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Do nothing %%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Data already selected and ready %%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+    elseif AnalysisType == 2      
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Select raw data from mat file %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -132,7 +138,7 @@ for i = 1 : numFiles
     %%% Clean-up gaps and overlaps %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    timeSeriesTC1 = cleanUpTS(timeSeriesTC1);
+    timeSeriesTC1 = cleanUpTS(timeSeriesTC1); % TO-DO; only cleans up overlaps so far
         
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series POST-clean-up %%%
@@ -169,8 +175,9 @@ for i = 1 : numFiles
 end
 
 
-
-%% POST-PROCESSING %%%%
+%%%%%%%%%%%%%%%%%%
+%% ANALYZE DATA %%
+%%%%%%%%%%%%%%%%%%
 
 %% Evaluate group data if real data
 
@@ -201,14 +208,16 @@ end
 if AnalysisType == 3
     
 
-    %%%%%%%%%%%%%%%%%%%%
-    %%% Correlations %%%
-    %%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%
+    %%% Autocorrelation %%%
+    %%%%%%%%%%%%%%%%%%%%%%%
     
-    % auto-correlation (return best lag(sec) and best normalized r coeff)
+    % Autocorrelation (return best lag(sec) and best normalized r coeff)
     [lagTC1, rTC1] = autocorrelation(simRes.run(1,1).data(:,2), FR, simRes.run(1,1).name);
-    %[lagTC2, rTC2] = autocorrelation(timeSeriesTC2(:,2), FR, 'timeSeriesTC1');
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Cross- correlation %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%
        
     % cross-correlation analysis (return best lag(sec), best norm r-coeff,
     % r-coeff at 0 sec lag (xcorr), r-coeff at 0 sec lag (corrcoef)
