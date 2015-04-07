@@ -19,9 +19,11 @@ experiment.
 
 # TODO
 
-- develop analysis section for dominance durations
+- add option to remove 1st epoch in deriveVars.m
 - clean-up plots
-- clean-up gaps
+- clean-up gaps 
+- remove dominance durations < 300 ms
+- analysis section for group data
 
 # Important files
 
