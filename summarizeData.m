@@ -1,4 +1,4 @@
-function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB] = summarizeData(TS, filename, plot_yn)
+function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB, numSwitches] = summarizeData(TS, filename, plot_yn)
 
 %keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,6 +36,7 @@ timesB_split = cat(2, timesB_split, ones( size(timesB_split,1), 1)*-1 );
 timesCat = cat(1,timesA_split, timesB_split);
 [~, d2] = sort(timesCat(:,1));
 timesSort = timesCat(d2,:);
+numSwitches = length(timesCat);
 
 % measure gaps and overlaps
 for i = 1: length(timesSort) - 1 % -1 because # of switches is one less than # of presses
