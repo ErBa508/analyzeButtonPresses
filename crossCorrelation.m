@@ -1,4 +1,11 @@
 function [bestLag, bestR, r0_1, r0_2] = crossCorrelation(TC1, TC2, FR, string)
+%%% In signal processing, cross-correlation is a measure of similarity of
+%%% two series as a function of the lag of one relative to the other. This
+%%% is also known as a sliding dot product or sliding inner-product. It is
+%%% commonly used for searching a long signal for a shorter, known feature.
+%%% In probability and statistics, the term cross-correlations is used for
+%%% referring to the correlations between the entries of two random vectors
+%%% X and Y.
 
 % simulations need to be the same length (like behavioral data)
 if length(TC1) > length(TC2)
