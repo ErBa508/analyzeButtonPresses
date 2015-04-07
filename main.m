@@ -17,7 +17,7 @@ close all
 %% CONSTANTS %%
 %%%%%%%%%%%%%%%
 
-AnalysisType = 1; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
+AnalysisType = 2; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
 FR = 120; % frame rate
 
@@ -132,33 +132,52 @@ for i = 1 : numFiles
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % Summarize gap and overlap data with plots %
-    [gapOverlap_pre, meanGapOverlap_pre, stdGapOverlap_pre, durA_pre, durB_pre] = summarizeData(timeSeriesTC1, filename, plot_yn);
+    [gapOverlap_pre, meanGapOverlap_pre, stdGapOverlap_pre, durA_pre, durB_pre, numSwitches_pre] = summarizeData(timeSeriesTC1, filename, plot_yn);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Clean-up gaps and overlaps %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     timeSeriesTC1 = cleanUpTS(timeSeriesTC1); % TO-DO; only cleans up overlaps so far
+    
+    % TO-DO; set dominance durations less than 300 ms to zero
         
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series POST-clean-up %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post] = summarizeData(timeSeriesTC1, filename, plot_yn);
+    
+    [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post, numSwitches_post] = summarizeData(timeSeriesTC1, filename, plot_yn);
     
     pause % to view histogram and plot for each subject
     
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%% Derive new variables %%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % (1) relative dominance duration per percept, (2) mean dominance
+    % duration per percept, 3) reaction time for 1st percept (s), (4)
+    % alternation rate (s)
+    
+    [percTimeA, percTimeB, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post);
+
     if AnalysisType == 2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Save result data to mat file %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         %save key press RESULTS to .mat file %
+        % NB - currently re-writing .mat file each time run script %
         keyRes.subjects(1,i).name = filename; %save filename
         keyRes.subjects(1,i).data = timeSeriesTC1; % save time series
         keyRes.subjects(1,i).gap = gapOverlap_post; %save gaps/overlaps values
         keyRes.subjects(1,i).results(1) = meanGapOverlap_post; %save single val results in results bin
         keyRes.subjects(1,i).results(2) = stdGapOverlap_post;
+        keyRes.subjects(1,i).results(3) = percTimeA;
+        keyRes.subjects(1,i).results(4) = percTimeB;
+        keyRes.subjects(1,i).results(5) = meanDurA;
+        keyRes.subjects(1,i).results(6) = meanDurB;
+        keyRes.subjects(1,i).results(7) = RT;
+        keyRes.subjects(1,i).results(8) = alternRate;
         save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyRes.mat','keyRes');
         
     elseif AnalysisType == 3
@@ -170,14 +189,24 @@ for i = 1 : numFiles
         simRes.run(1,i).gap = gapOverlap_post; %add gaps/overlaps values
         simRes.run(1,i).results(1) = meanGapOverlap_post; %add single val results in results bin
         simRes.run(1,i).results(2) = stdGapOverlap_post;
+        simRes.run(1,i).results(3) = percTimeA;
+        simRes.run(1,i).results(4) = percTimeB;
+        simRes.run(1,i).results(5) = meanDurA;
+        simRes.run(1,i).results(6) = meanDurB;
+        simRes.run(1,i).results(7) = RT;
+        simRes.run(1,i).results(8) = alternRate;
     end
     
 end
 
 
-%%%%%%%%%%%%%%%%%%
-%% ANALYZE DATA %%
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% ANALYZE GROUP DATA %%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Visualize group data %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Evaluate group data if real data
 
