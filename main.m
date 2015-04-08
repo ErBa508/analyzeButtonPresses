@@ -170,6 +170,7 @@ for i = 1 : numFiles
         keyRes.subjects(1,i).name = filename; %save filename
         keyRes.subjects(1,i).data = timeSeriesTC1; % save time series
         keyRes.subjects(1,i).gap = gapOverlap_post; %save gaps/overlaps values
+        keyRes.subjects(1,i).resLabel = {'meanGapOverlap' 'stdGapOverlap' 'percTimeA' 'percTimeB' 'meanDurA' 'meanDurB' 'RT' 'alternRate'};
         keyRes.subjects(1,i).results(1) = meanGapOverlap_post; %save single val results in results bin
         keyRes.subjects(1,i).results(2) = stdGapOverlap_post;
         keyRes.subjects(1,i).results(3) = percTimeA;
@@ -187,6 +188,7 @@ for i = 1 : numFiles
         simRes.run(1,i).name = filename; %add filename
         simRes.run(1,i).data = timeSeriesTC1;
         simRes.run(1,i).gap = gapOverlap_post; %add gaps/overlaps values
+        simRes.run(1,i).resLabel = {'meanGapOverlap' 'stdGapOverlap' 'percTimeA' 'percTimeB' 'meanDurA' 'meanDurB' 'RT' 'alternRate'};
         simRes.run(1,i).results(1) = meanGapOverlap_post; %add single val results in results bin
         simRes.run(1,i).results(2) = stdGapOverlap_post;
         simRes.run(1,i).results(3) = percTimeA;
@@ -215,19 +217,21 @@ if AnalysisType == 2
     load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyRes.mat','keyRes');
     
     for i = 1 : length(keyData.subjects)
-        groupMeanGap(i,1) = keyRes.subjects(1,i).results(1);
-        groupMeanStd(i,1) = keyRes.subjects(1,i).results(2);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Add results to group matrix %%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        groupRes(i,:) = keyRes.subjects(1,i).results; % take the results for each subject and add to a 'Group Results' matrix
     end
     
-    
-    figure
-    hist(groupMeanGap)
-    str = sprintf('Mean gap time between press for %d subjects with mean gap %.2f \n (a negative # would indicate overlap)', length(groupMeanGap), mean(groupMeanGap));
-    title(str)
-    figure
-    hist(groupMeanStd)
-    str2 = sprintf('Standard deviation for gap time for %d subjects with mean SD %.2f', length(groupMeanStd), mean(groupMeanStd));
-    title(str2)
+    for j = 1 : size(groupRes,2)
+        %%%%%%%%%%%%%%%%%
+        %%% Histogram %%%
+        %%%%%%%%%%%%%%%%%
+        figure
+        hist(groupRes(:,j))
+        str = sprintf('%s for %d subjects with mean of %.2f s/%', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
+        title(str)
+    end
     
     %~ 120 ms gap is the mean, ~ 50 is 1 SD : anything > 220 ms is an 'outlier'
 end
