@@ -17,7 +17,7 @@ close all
 %% CONSTANTS %%
 %%%%%%%%%%%%%%%
 
-AnalysisType = 2; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
+AnalysisType = 1; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
 
 FR = 120; % frame rate
 
@@ -33,29 +33,34 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%
     %%% Select data %%%
     %%%%%%%%%%%%%%%%%%%
+      
+    [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2015 ButtonPress txt files\*.txt', 'Pick a .txt data file');
+    rawData = importfile(strcat(pathname, filename)); % importfile is a Matlab generated function that generates a matrix (string information dropped)
+    splitData = sepTrials( rawData, filename); % Separate data file into separate trials
     
-    numFiles = 1;
+    numTrials = length(splitData.trial);
+    numFiles = numTrials; % for consistency with other analysis types, refer to as numFiles
     
-    [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2013 ButtonPress dat files\*.dat', 'Pick a .dat data file');
-    rawData = importdata(strcat(pathname, filename));
-        
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Save raw data to mat file %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % See if data already saved to mat file %
     load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
-    L = length(keyData.subjects);
-    
-    for i = 1 : L
-        fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, filename);
-    end
-    
-    % Save raw data to mat file %
-    if sum(fileRepeat) < 1
-        keyData.subjects(1, L + 1).name = filename;
-        keyData.subjects(1, L + 1).data = rawData;
-        save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
+        
+    for j = 1 : numFiles
+        numSubj = length(keyData.subjects);
+        
+        for i = 1 : numSubj
+            fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, splitData.trial(1,j).name); %subject name/trial saved yet?
+        end
+        
+        % Save raw data to mat file %
+        if sum(fileRepeat) < 1
+            keyData.subjects(1, numSubj + 1).name = splitData.trial(1,j).name;
+            keyData.subjects(1, numSubj + 1).data = splitData.trial(1,j).data;
+            save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
+        end
     end
     
 elseif AnalysisType == 2
@@ -94,19 +99,23 @@ end
 for i = 1 : numFiles
     
     if AnalysisType == 1
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%% Do nothing %%%%%%%%%%%%%%%%%%%%%%%%
-        %%% Data already selected and ready %%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Select trial data from splitData struct %%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        clear selData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
+        clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;        
+        selData = splitData.trial(1,i).data;
+        filename = splitData.trial(i).name;
         
     elseif AnalysisType == 2      
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Select raw data from mat file %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        clear rawData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
+        clear selData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
         clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;
-        rawData = keyData.subjects(1,i).data;
+        selData = keyData.subjects(1,i).data;
         filename = keyData.subjects(i).name;
         
     elseif AnalysisType == 3
@@ -114,9 +123,9 @@ for i = 1 : numFiles
         %%% Select simulated data from structure %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        clear rawData; clear gapOverlap_post % clear data from prev loop
+        clear selData; clear gapOverlap_post % clear data from prev loop
         clear durA_post; clear durB_post; clear timeSeriesTC1;
-        rawData = simData.tc(1,i).data;
+        selData = simData.tc(1,i).data;
         filename = simData.tc(1,i).name;
         
     end
@@ -125,7 +134,7 @@ for i = 1 : numFiles
     %%% Generate press time series %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    timeSeriesTC1 = genTimeSeries(rawData,FR); 
+    timeSeriesTC1 = genTimeSeries(selData,FR); 
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series pre-clean-up %%%
