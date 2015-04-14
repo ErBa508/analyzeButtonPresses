@@ -6,12 +6,23 @@ function [ trialData ] = sepTrials( rawData, filename )
 % label vector
 sampleData = cat(2, rawData(:,1), rawData(:,5));
 
-% Re-label key press label 4/-4 to 2/-2
-ind4 = sampleData(:,2) == 4;
-sampleData(ind4,2) = 2;
 
-indm4 = sampleData(:,2) == -4;
+% Re-label key press label 1/-1
+
+% ind1 = sampleData(:,2) == 1; % Bon: 1 goes to 1
+% sampleData(ind1,2) = 1;
+
+indm1 = sampleData(:,2) == -1; % Boff: -1 goes to 2
+sampleData(indm1, 2) = 2;
+
+% Re-label key press label 4/-4
+
+ind4 = sampleData(:,2) == 4; % Aon: 4 goes to -1
+sampleData(ind4,2) = -1;
+
+indm4 = sampleData(:,2) == -4; % Aoff: -4 goes to -2
 sampleData(indm4, 2) = -2;
+
 
 % Find trial start and end
 ind8 = find(sampleData(:,2) == 8);
