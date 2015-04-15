@@ -13,17 +13,19 @@ close all
 
 
 
-%%%%%%%%%%%%%%%
-%% CONSTANTS %%
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+%% INPUT PARAMS %%
+%%%%%%%%%%%%%%%%%%
 
-AnalysisType = 2; %if single file analysis = 1; if batch analysis = 2; if simulation = 3
+P = config(); % function to set parameters
+st_dir = P.input_path; % input directory
+out_dir = P.output_path; % output directory
+raw_mat = P.data_mat_name; % structure with raw data for all subjects
+res_mat = P.results_mat_name; % structure with results data for all subjects
 
-FR = 120; % frame rate
-
-plot_yn = 1; % if want to see summary plots (1 if yes, 0 if no)
-
-
+AnalysisType = P.analysis_type; %if single file analysis = 1; if batch analysis = 2; if simulation = 3 
+FR = P.FR; % frame rate
+plot_yn = P.plot_yn; % if want to see summary plots (1 if yes, 0 if no)
 
 %%%%%%%%%%%%%%
 %% GET DATA %%
@@ -36,7 +38,7 @@ if AnalysisType == 1
     
     numFiles = 1;
     
-    [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2013 ButtonPress dat files\*.dat', 'Pick a .dat data file');
+    [filename, pathname] = uigetfile(st_dir, 'Pick a .dat data file');
     rawData = importdata(strcat(pathname, filename));
         
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +46,8 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % See if data already saved to mat file %
-    load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
+    
+    load(strcat(out_dir, raw_mat));
     L = length(keyData.subjects);
     
     for i = 1 : L
@@ -55,7 +58,7 @@ if AnalysisType == 1
     if sum(fileRepeat) < 1
         keyData.subjects(1, L + 1).name = filename;
         keyData.subjects(1, L + 1).data = rawData;
-        save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
+        save(strcat(out_dir, raw_mat),'keyData');
     end
     
 elseif AnalysisType == 2
@@ -64,7 +67,7 @@ elseif AnalysisType == 2
     %%% Get raw data mat file %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
+    load(strcat(out_dir, raw_mat));
     
     numFiles = length(keyData.subjects);
     
@@ -179,7 +182,7 @@ for i = 1 : numFiles
         keyRes.subjects(1,i).results(6) = meanDurB;
         keyRes.subjects(1,i).results(7) = RT;
         keyRes.subjects(1,i).results(8) = alternRate;
-        save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyRes.mat','keyRes');
+        save(strcat(out_dir, res_mat),'keyRes');
         
     elseif AnalysisType == 3
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -214,7 +217,7 @@ end
 
 if AnalysisType == 2
     
-    load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyRes.mat','keyRes');
+    load(strcat(out_dir, res_mat),'keyRes');
     
     for i = 1 : length(keyData.subjects)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
