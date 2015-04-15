@@ -46,18 +46,26 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % See if data already saved to mat file %
+    if exist(strcat(out_dir, raw_mat), 'file') 
+        load(strcat(out_dir, raw_mat));
+        L = length(keyData.subjects);
     
-    load(strcat(out_dir, raw_mat));
-    L = length(keyData.subjects);
+        % if file exists, see if subject data saved yet 
+        for i = 1 : L
+            fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, filename);
+        end
     
-    for i = 1 : L
-        fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, filename);
-    end
-    
-    % Save raw data to mat file %
-    if sum(fileRepeat) < 1
-        keyData.subjects(1, L + 1).name = filename;
-        keyData.subjects(1, L + 1).data = rawData;
+        % if subject data not saved, save raw data to mat file %
+        if sum(fileRepeat) < 1
+            keyData.subjects(1, L + 1).name = filename;
+            keyData.subjects(1, L + 1).data = rawData;
+            save(strcat(out_dir, raw_mat),'keyData');
+        end
+        
+    % if file does not exist, save subject data into new mat file
+    else                                     
+        keyData.subjects(1, 1).name = filename;
+        keyData.subjects(1, 1).data = rawData;
         save(strcat(out_dir, raw_mat),'keyData');
     end
     
@@ -67,7 +75,7 @@ elseif AnalysisType == 2
     %%% Get raw data mat file %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    load(strcat(out_dir, raw_mat));
+    load(strcat(out_dir, raw_mat)); % load keyData.mat
     
     numFiles = length(keyData.subjects);
     
