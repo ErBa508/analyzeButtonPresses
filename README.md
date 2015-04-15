@@ -27,13 +27,17 @@ experiment.
 
 # Important files
 
+- **config.m** - set parameters including working directories/paths to data
 - **main.m** - entry point for running analysis script (Written by EB) 
 
 # Short instructions 
 
-Open main.m and modify the value of the variable "AnalysisType". Set equal to 
-1 to analyze a single .dat file. Set equal to 2 to analyze all subject data 
-saved in keyData.mat. Set equal to 3 to analyze simulated dataset. 
+Open config.m and (a) set the path to select data, (b) set the path to store data
+and results, and (c) set the value of the variable "analysis_type". "analysis_type" can
+be set equal to 1 to analyze a single file; equal to 2 to analyze all subject data 
+saved in keyData.mat; set equal to 3 to analyze simulated dataset. (d) Also, set the
+value for "input_format_vers", e.g., the version of the raw data (1 = old format; 2 = new 
+format)
 
 # Supporting functions 
 
