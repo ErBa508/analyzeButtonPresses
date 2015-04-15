@@ -27,7 +27,7 @@ experiment.
 
 # Important files
 
-- **config.m** - set parameters including working directories/paths to data
+- **config.m** - set parameters including working directories/paths to data (Written by EB)
 - **main.m** - entry point for running analysis script (Written by EB) 
 
 # Short instructions 
