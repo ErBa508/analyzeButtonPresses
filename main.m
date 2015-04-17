@@ -12,7 +12,6 @@ clear all
 close all
 
 
-
 %%%%%%%%%%%%%%%%%%
 %% INPUT PARAMS %%
 %%%%%%%%%%%%%%%%%%
@@ -26,6 +25,8 @@ res_mat = P.results_mat_name; % structure with results data for all subjects
 AnalysisType = P.analysis_type; %if single file analysis = 1; if batch analysis = 2; if simulation = 3 
 FR = P.FR; % frame rate
 plot_yn = P.plot_yn; % if want to see summary plots (1 if yes, 0 if no)
+formatType = 1; % new format
+
 
 %%%%%%%%%%%%%%
 %% GET DATA %%
@@ -36,38 +37,7 @@ if AnalysisType == 1
     %%% Select data %%%
     %%%%%%%%%%%%%%%%%%%
     
-    numFiles = 1;
-    
-    [filename, pathname] = uigetfile(st_dir, 'Pick a .dat data file');
-    rawData = importdata(strcat(pathname, filename));
-        
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%% Save raw data to mat file %%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    % See if data already saved to mat file %
-    if exist(strcat(out_dir, raw_mat), 'file') 
-        load(strcat(out_dir, raw_mat));
-        L = length(keyData.subjects);
-    
-        % if file exists, see if subject data saved yet 
-        for i = 1 : L
-            fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, filename);
-        end
-    
-        % if subject data not saved, save raw data to mat file %
-        if sum(fileRepeat) < 1
-            keyData.subjects(1, L + 1).name = filename;
-            keyData.subjects(1, L + 1).data = rawData;
-            save(strcat(out_dir, raw_mat),'keyData');
-        end
-        
-    % if file does not exist, save subject data into new mat file
-    else                                     
-        keyData.subjects(1, 1).name = filename;
-        keyData.subjects(1, 1).data = rawData;
-        save(strcat(out_dir, raw_mat),'keyData');
-    end
+    [numFiles, keyData, subInd] = selectData(formatType, st_dir, out_dir, raw_mat);
     
 elseif AnalysisType == 2
     
@@ -105,19 +75,33 @@ end
 for i = 1 : numFiles
     
     if AnalysisType == 1
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%% Do nothing %%%%%%%%%%%%%%%%%%%%%%%%
-        %%% Data already selected and ready %%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Select trial data from keyData struct %%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        clear selData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
+        clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;
+        
+        if formatType == 1
+            
+            selData = keyData.subjects(1,subInd).data; % subjInd is a scalar value
+            filename = keyData.subjects(subInd).name;
+        
+        elseif formatType == 2
+            
+            L = subInd(i) - 1; %subInd = vector of trial indices; subtract 1 from index because adding i
+            selData = keyData.subjects(1,L + 1).data;
+            filename = keyData.subjects(L + 1).name;
+        end
         
     elseif AnalysisType == 2      
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Select raw data from mat file %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        clear rawData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
+        clear selData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
         clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;
-        rawData = keyData.subjects(1,i).data;
+        selData = keyData.subjects(1,i).data;
         filename = keyData.subjects(i).name;
         
     elseif AnalysisType == 3
@@ -125,9 +109,9 @@ for i = 1 : numFiles
         %%% Select simulated data from structure %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        clear rawData; clear gapOverlap_post % clear data from prev loop
+        clear selData; clear gapOverlap_post % clear data from prev loop
         clear durA_post; clear durB_post; clear timeSeriesTC1;
-        rawData = simData.tc(1,i).data;
+        selData = simData.tc(1,i).data;
         filename = simData.tc(1,i).name;
         
     end
@@ -136,7 +120,7 @@ for i = 1 : numFiles
     %%% Generate press time series %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    timeSeriesTC1 = genTimeSeries(rawData,FR); 
+    timeSeriesTC1 = genTimeSeries(selData,FR); 
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series pre-clean-up %%%
