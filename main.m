@@ -40,36 +40,7 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%
     
     [numFiles, keyData, subInd] = selectData(formatType, st_dir, out_dir, raw_mat);
-    
-    
-%     [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2015 ButtonPress txt files\*.txt', 'Pick a .txt data file');
-%     rawData = importfile(strcat(pathname, filename)); % importfile is a Matlab generated function that generates a matrix (string information dropped)
-%     splitData = sepTrials( rawData, filename); % Separate data file into separate trials
-%     
-%     numTrials = length(splitData.trial);
-%     numFiles = numTrials; % for consistency with other analysis types, refer to as numFiles
-%     
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     %%% Save raw data to mat file %%%
-%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     
-%     % See if data already saved to mat file %
-%     load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
-%         
-%     for j = 1 : numFiles
-%         numSubj = length(keyData.subjects);
-%         
-%         for i = 1 : numSubj
-%             fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, splitData.trial(1,j).name); %subject name/trial saved yet?
-%         end
-%         
-%         % Save raw data to mat file %
-%         if sum(fileRepeat) < 1
-%             keyData.subjects(1, numSubj + 1).name = splitData.trial(1,j).name;
-%             keyData.subjects(1, numSubj + 1).data = splitData.trial(1,j).data;
-%             save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
-%         end
-%     end
+   
     
 elseif AnalysisType == 2
     
