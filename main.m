@@ -23,7 +23,12 @@ FR = 120; % frame rate
 
 plot_yn = 1; % if want to see summary plots (1 if yes, 0 if no)
 
+%st_dir = 'C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2015 ButtonPress txt files\*.txt';
+st_dir = 'C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2013 ButtonPress dat files\*.dat';
+out_dir = 'C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\';
+raw_mat = 'keyData.mat'; 
 
+formatType = 1; % new format
 
 %%%%%%%%%%%%%%
 %% GET DATA %%
@@ -33,35 +38,38 @@ if AnalysisType == 1
     %%%%%%%%%%%%%%%%%%%
     %%% Select data %%%
     %%%%%%%%%%%%%%%%%%%
-      
-    [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2015 ButtonPress txt files\*.txt', 'Pick a .txt data file');
-    rawData = importfile(strcat(pathname, filename)); % importfile is a Matlab generated function that generates a matrix (string information dropped)
-    splitData = sepTrials( rawData, filename); % Separate data file into separate trials
     
-    numTrials = length(splitData.trial);
-    numFiles = numTrials; % for consistency with other analysis types, refer to as numFiles
+    [numFiles, keyData, subInd] = selectData(formatType, st_dir, out_dir, raw_mat);
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%% Save raw data to mat file %%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % See if data already saved to mat file %
-    load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
-        
-    for j = 1 : numFiles
-        numSubj = length(keyData.subjects);
-        
-        for i = 1 : numSubj
-            fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, splitData.trial(1,j).name); %subject name/trial saved yet?
-        end
-        
-        % Save raw data to mat file %
-        if sum(fileRepeat) < 1
-            keyData.subjects(1, numSubj + 1).name = splitData.trial(1,j).name;
-            keyData.subjects(1, numSubj + 1).data = splitData.trial(1,j).data;
-            save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
-        end
-    end
+%     [filename, pathname] = uigetfile('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\raw\2015 ButtonPress txt files\*.txt', 'Pick a .txt data file');
+%     rawData = importfile(strcat(pathname, filename)); % importfile is a Matlab generated function that generates a matrix (string information dropped)
+%     splitData = sepTrials( rawData, filename); % Separate data file into separate trials
+%     
+%     numTrials = length(splitData.trial);
+%     numFiles = numTrials; % for consistency with other analysis types, refer to as numFiles
+%     
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     %%% Save raw data to mat file %%%
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     
+%     % See if data already saved to mat file %
+%     load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
+%         
+%     for j = 1 : numFiles
+%         numSubj = length(keyData.subjects);
+%         
+%         for i = 1 : numSubj
+%             fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, splitData.trial(1,j).name); %subject name/trial saved yet?
+%         end
+%         
+%         % Save raw data to mat file %
+%         if sum(fileRepeat) < 1
+%             keyData.subjects(1, numSubj + 1).name = splitData.trial(1,j).name;
+%             keyData.subjects(1, numSubj + 1).data = splitData.trial(1,j).data;
+%             save('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat','keyData');
+%         end
+%     end
     
 elseif AnalysisType == 2
     
@@ -99,14 +107,24 @@ end
 for i = 1 : numFiles
     
     if AnalysisType == 1
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%% Select trial data from splitData struct %%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% Select trial data from keyData struct %%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         clear selData; clear gapOverlap_pre; clear gapOverlap_post; % clear data from prev loop
-        clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;        
-        selData = splitData.trial(1,i).data;
-        filename = splitData.trial(i).name;
+        clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;
+        
+        if formatType == 1
+            
+            selData = keyData.subjects(1,subInd).data; % subjInd is a scalar value
+            filename = keyData.subjects(subInd).name;
+        
+        elseif formatType == 2
+            
+            L = subInd(i) - 1; %subInd = vector of trial indices; subtract 1 from index because adding i
+            selData = keyData.subjects(1,L + 1).data;
+            filename = keyData.subjects(L + 1).name;
+        end
         
     elseif AnalysisType == 2      
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
