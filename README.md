@@ -7,10 +7,11 @@ Date ended: ACTIVE
 This project analyzes the timing of alternating mouse button presses 
 (right/left or a/b) made in response to a bi-stable visual stimulus.
 
-main.m will (1) get data, (2) generate a button press time series, (3) summarize
-and visualize the time series pre-clean-up, (4) clean-up overlaps (not yet gaps) in
-button presses, (5) summarize and visualize time series post-clean-up, and (6)
-analyze the time series data.
+main.m will (1) get data, (2) generate a button press time series (list of mouse 
+states as a function of time with a fixed dt), (3) summarize and visualize the 
+time series pre-clean-up, (4) clean-up overlaps (not yet gaps) in button presses, 
+(5) summarize and visualize time series post-clean-up, and (6) analyze the time 
+series data.
 
 # Motivation
 
