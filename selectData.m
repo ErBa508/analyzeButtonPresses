@@ -1,6 +1,6 @@
 function [numFiles, keyData, index] = selectData( formatType, st_dir, out_dir, raw_mat )
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+%selectData This function imports the text or dat raw data files
+
 %keyboard
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -74,25 +74,7 @@ elseif formatType == 2
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Save raw data to mat file %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    %     % See if data already saved to mat file %
-    %     load('C:\Users\Erin\Box Sync\UPF\PlaidProj\Data\processed\keyPressData\keyData.mat');
-    %
-    %     for j = 1 : numFiles
-    %         numSubj = length(keyData.subjects);
-    %
-    %         for i = 1 : numSubj
-    %             fileRepeat(i,1) =  strcmp(keyData.subjects(1,i).name, splitData.trial(1,j).name); %subject name/trial saved yet?
-    %         end
-    %
-    %         % Save raw data to mat file %
-    %         if sum(fileRepeat) < 1
-    %             keyData.subjects(1, numSubj + 1).name = splitData.trial(1,j).name;
-    %             keyData.subjects(1, numSubj + 1).data = splitData.trial(1,j).data;
-    %             save(strcat(out_dir, raw_mat),'keyData');
-    %         end
-    %     end
-    
+      
     for j = 1 : numTrials 
         
         % See if data already saved to mat file %
