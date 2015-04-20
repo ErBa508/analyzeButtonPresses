@@ -25,7 +25,7 @@ res_mat = P.results_mat_name; % structure with results data for all subjects
 AnalysisType = P.analysis_type; %if single file analysis = 1; if batch analysis = 2; if simulation = 3 
 FR = P.FR; % frame rate
 plot_yn = P.plot_yn; % if want to see summary plots (1 if yes, 0 if no)
-formatType = 1; % new format
+formatType = P.input_format_vers; % new format
 
 
 %%%%%%%%%%%%%%
