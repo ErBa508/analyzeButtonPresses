@@ -57,13 +57,13 @@ elseif AnalysisType == 3
     
     numFiles = 2;
 
-    simData.tc(1,1).data = simTC_wJitter(3500,500,4800,800,600,150,20); % generate a simulated time course
-    simData.tc(1,1).data(:,2) = simData.tc(1,1).data(:,2)/1000; % convert time course (col 2) to seconds
-    simData.tc(1,1).name = 'Simulation 1'; 
+    simData.es(1,1).data = simTC_wJitter(3500,500,4800,800,600,150,20); % generate a simulated event series
+    simData.es(1,1).data(:,2) = simData.es(1,1).data(:,2)/1000; % convert event series (col 2) to seconds
+    simData.es(1,1).name = 'Simulation 1'; 
     
-    simData.tc(1,2).data = simTC_wJitter(3000,500,4000,1600,200,150,20);
-    simData.tc(1,2).data(:,2) = simData.tc(1,2).data(:,2)/1000;
-    simData.tc(1,2).name = 'Simulation 2';
+    simData.es(1,2).data = simTC_wJitter(3000,500,4000,1600,200,150,20);
+    simData.es(1,2).data(:,2) = simData.es(1,2).data(:,2)/1000;
+    simData.es(1,2).name = 'Simulation 2';
 end
 
 
@@ -111,8 +111,8 @@ for i = 1 : numFiles
         
         clear selData; clear gapOverlap_post % clear data from prev loop
         clear durA_post; clear durB_post; clear timeSeriesTC1;
-        selData = simData.tc(1,i).data;
-        filename = simData.tc(1,i).name;
+        selData = simData.es(1,i).data;
+        filename = simData.es(1,i).name;
         
     end
     
