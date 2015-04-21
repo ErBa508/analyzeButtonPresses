@@ -143,6 +143,7 @@ for i = 1 : numFiles
     
     [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post, numSwitches_post] = summarizeData(timeSeriesTC1, filename, plot_yn);
     
+    fprintf('Script paused: press any button to continue\n')
     pause % to view histogram and plot for each subject
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%
