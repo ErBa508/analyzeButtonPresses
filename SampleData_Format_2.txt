@@ -1,0 +1,54 @@
+Timestamp	EventName	EventType	EventID	EventCode	EventCount	Parameters	Value for trial 1	Value for trial 2	Value for trial 3
+0.0	InputEvent	Mouse_DW	2	999		aperture yes/no	1	1	1
+0.214999914169	InputEvent	Mouse_UP	2	999		aperture color	(0.8, 0.8, 0.8)	(0.8, 0.8, 0.8)	(0.8, 0.8, 0.8)
+0.228999853134	TrialEvent	0	START	8	1	aperture division	3	3	3
+6.51399993896	InputEvent	Mouse_DW	4	4		num theta	90	90	90
+9.91299986839	InputEvent	Mouse_UP	4	-4		red color	(1.0, 0.88, 0.88)	(1.0, 0.88, 0.88)	(1.0, 0.88, 0.88)
+10.3469998837	InputEvent	Mouse_DW	1	1		cyan_color	(0.88, 1.0, 1.0)	(0.88, 1.0, 1.0)	(0.88, 1.0, 1.0)
+11.6909999847	InputEvent	Mouse_UP	1	-1		fixation point color	(1.0, 1.0, 1.0)	(1.0, 1.0, 1.0)	(1.0, 1.0, 1.0)
+11.757999897	InputEvent	Mouse_DW	4	4		stereo1	0	0	0
+15.2239999771	InputEvent	Mouse_DW	1	1		stereo2	0	0	0
+15.2239999771	InputEvent	Mouse_UP	4	-4		protection zone color	(0.0, 0.0, 0.0)	(0.0, 0.0, 0.0)	(0.0, 0.0, 0.0)
+23.3579998016	InputEvent	Mouse_UP	1	-1		eyetracker yes/no	1	1	1
+23.3589999676	InputEvent	Mouse_DW	4	4		randomize trials	0	0	0
+28.0230000019	InputEvent	Mouse_UP	4	-4		type of fixation point	N	o	 
+28.0559999943	InputEvent	Mouse_DW	1	1		framerate	60.0	60.0	60.0
+30.2399997711	TrialEvent	0	END	-8	2	fixation point size	5	5	5
+30.5529999733	InputEvent	Mouse_UP	1	-1		foreground color	(0.8, 0.8, 0.8)	(0.8, 0.8, 0.8)	(0.8, 0.8, 0.8)
+31.518999815	InputEvent	Mouse_DW	2	999		forced mode yes/no	0	0	0
+31.7019999027	InputEvent	Mouse_UP	2	999		aperture radius (not used now)	13	13	13
+31.7189998627	TrialEvent	1	START	8	3	Time fixation point (not used now)	0.7	0.7	0.7
+34.0690000057	InputEvent	Mouse_DW	1	1		number of trials	3	3	3
+37.7019999027	InputEvent	Mouse_UP	1	-1		grating1 wavelength	100	100	100
+37.9039998055	InputEvent	Mouse_DW	4	4		grating1 duty cycle	0.2	0.2	0.2
+43.5699999332	InputEvent	Mouse_UP	4	-4		grating1 orientation	8	8	8
+43.5709998608	InputEvent	Mouse_DW	1	1		grating1 speed	60	70	80
+48.3359999657	InputEvent	Mouse_UP	1	-1		grating2 wavelength	100	100	100
+50.4709999561	InputEvent	Mouse_DW	1	1		grating2 duty cycle	0.2	0.2	0.2
+55.0719997883	InputEvent	Mouse_UP	1	-1		grating2 orientation	-8	-8	-8
+55.1059999466	InputEvent	Mouse_DW	4	4		grating2 speed	-60	-70	-80
+59.0739998817	InputEvent	Mouse_UP	4	-4		time for each trial	30	30	30
+59.0749998093	InputEvent	Mouse_DW	1	1		-	-	-	-	
+61.7229998112	TrialEvent	1	END	-8	4	-	-	-	-	
+62.0929999352	InputEvent	Mouse_UP	1	-1		-	-	-	-	
+62.9919998646	InputEvent	Mouse_DW	2	999		-	-	-	-	
+63.2089998722	InputEvent	Mouse_UP	2	999		-	-	-	-	
+63.2249999046	TrialEvent	2	START	8	5	-	-	-	-	
+64.1089999676	InputEvent	Mouse_DW	4	4		-	-	-	-	
+67.1769998074	InputEvent	Mouse_DW	1	1		-	-	-	-	
+67.2109999657	InputEvent	Mouse_UP	4	-4		-	-	-	-	
+69.5429999828	InputEvent	Mouse_UP	1	-1		-	-	-	-	
+69.8099999428	InputEvent	Mouse_DW	4	4		-	-	-	-	
+70.6419999599	InputEvent	Mouse_UP	4	-4		-	-	-	-	
+71.8089997768	InputEvent	Mouse_DW	1	1		-	-	-	-	
+74.9419999123	InputEvent	Mouse_UP	1	-1		-	-	-	-	
+74.9419999123	InputEvent	Mouse_DW	4	4		-	-	-	-	
+80.743999958	InputEvent	Mouse_DW	1	1		-	-	-	-	
+80.8109998703	InputEvent	Mouse_UP	4	-4		-	-	-	-	
+83.7429997921	InputEvent	Mouse_UP	1	-1		-	-	-	-	
+83.7429997921	InputEvent	Mouse_DW	4	4		-	-	-	-	
+89.7109999657	InputEvent	Mouse_DW	1	1		-	-	-	-	
+89.743999958	InputEvent	Mouse_UP	4	-4		-	-	-	-	
+92.8099999428	InputEvent	Mouse_DW	4	4		-	-	-	-	
+92.8099999428	InputEvent	Mouse_UP	1	-1		-	-	-	-	
+93.2269999981	TrialEvent	2	END	-8	6	-	-	-	-	
