@@ -102,6 +102,10 @@ if plot_yn==1
     tmpmin = min(gapOverlap(:,1));
     tmpmax = max(gapOverlap(:,1));
     
+    if tmpmax == 0 % if no overlaps in event series
+        tmpmax = 0.6; % set arbitrary value for tmax 
+    end % this will be used as the max x-axis val in the hist
+    
     binw2 = (abs(tmpmin)+tmpmax)/6;
     
     bins2 = tmpmin: binw2: tmpmax;
