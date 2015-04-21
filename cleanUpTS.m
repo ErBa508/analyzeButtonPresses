@@ -31,4 +31,6 @@ end
 
 % make sure no remaining overlaps
 overlapInd = find(TS(:,2) + TS(:,3) == 2); 
-isempty(overlapInd)
+if ~isempty(overlapInd)
+    fprintf('Warning: There are overlaps that have not been taken care of\n')
+end

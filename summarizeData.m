@@ -45,7 +45,7 @@ for i = 1: length(timesSort) - 1 % -1 because # of switches is one less than # o
     
 end
 
-disp('gapOverlap var: positive value = gap, negative value = overlap');
+%disp('gapOverlap var: positive value = gap, negative value = overlap');
 meanGapOverlap = mean(gapOverlap(:,1));
 stdGapOverlap = std(gapOverlap(:,1));
 
