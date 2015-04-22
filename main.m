@@ -87,13 +87,15 @@ for i = 1 : numFiles
             selData = keyData.subjects(1,subInd).data; % subjInd is a scalar value
             filename = keyData.subjects(subInd).name;
             startTime = keyData.subjects(subInd).start;
-        
+            endTime = keyData.subjects(subInd).end; % time set to 0 as place holder (not in raw data file) and corrected in genTimeSeries.m
+            
         elseif formatType == 2
             
             L = subInd(i) - 1; %subInd = vector of trial indices; subtract 1 from index because adding i in next line
             selData = keyData.subjects(1,L + 1).data;
             filename = keyData.subjects(L + 1).name;
             startTime = keyData.subjects(L + 1).start;
+            endTime = keyData.subjects(L + 1).end; % this time is accurate as it has been recorded in the file
         end
         
     elseif AnalysisType == 2      
@@ -106,6 +108,7 @@ for i = 1 : numFiles
         selData = keyData.subjects(1,i).data;
         filename = keyData.subjects(i).name;
         startTime = keyData.subjects(i).start;
+        endTime = keyData.subjects(i).end;
         
     elseif AnalysisType == 3
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,13 +120,15 @@ for i = 1 : numFiles
         selData = simData.es(1,i).data;
         filename = simData.es(1,i).name;
         startTime = 0;
+        endTime = 0; % this time is set to 0 as a place holder and corrected at end of genTimeSeries.m
+   
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Generate press time series %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    timeSeriesTC1 = genTimeSeries(selData,FR); 
+    [timeSeriesTC1, endTime] = genTimeSeries(selData, FR, endTime); 
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Summarize and visualize time series pre-clean-up %%%
@@ -157,7 +162,7 @@ for i = 1 : numFiles
     % duration per percept, 3) reaction time for 1st percept (s), (4)
     % alternation rate (s)
     
-    [percTimeA, percTimeB, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post);
+    [percTimeA, percTimeB, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime);
 
     if AnalysisType == 2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
