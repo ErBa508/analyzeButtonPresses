@@ -1,2 +1,9 @@
 # Windows MATLAB default autosave extension
 *.asv
+
+# Mat files
+keyData.mat
+keyRes.mat
+
+# Config file
+config.m
