@@ -1,4 +1,4 @@
-function void = plotTC(hfig,Times,TCmax,Yvals,colorTC)
+function void = plotTC(hfig,Times,startTime, TCmax,Yvals,colorTC)
 % Plot time-course of perceptual alternations of ONE percept (A or B)
 % Usage: plotTC(hfig,Times,TCmax,Yvals,colorTC)
 %        (the function is void, no return value) 
@@ -12,7 +12,7 @@ ymin=Yvals(3);
 ymax=Yvals(4);
 tiny=TCmax/1000; % tiny dx to draw "vertical" lines in TC
 
-axis([0 TCmax ymin ymax])
+axis([startTime TCmax ymin ymax])
 hold on
 for i=1:size(Times,1)
     plot(hfig,Times(i,:),[Yvals(1) Yvals(2)],'Color',colorTC);

@@ -158,7 +158,7 @@ new format). Then run main.m.
 	- SUMMARY: this function takes the timeSeries data (button press as a 
 	function of time at 120 Hz) and returns (1) the length of each gap/overlap
 	between press A and B, (2) the duration of each press, and (3) the # of press switches. Called by **main.m**.
-    - INPUT: TS, filename (string), plot_yn (#)
+    - INPUT: TS, filename (string), plot_yn (#), startTime(#)
     	- TS (3 columns) (== timeSeries, see above)
 			- column 1 = time at 120 Hz
 			- column 2 = label of A events; Aon = 1, Aoff = 0
@@ -182,6 +182,7 @@ new format). Then run main.m.
 	- INPUT: TS (see TS above), numSwitches (#), domDurA (see durA above), domDurB (durB above)
 	- OUTPUT: relA (#), relB (#), meanDurA (#), meanDurB (#), RT (#), altRate (#)
 	- (Written by EB)
+
 - **analyzeTC.m** - returns timestamps of button presses (Written by NR)
 
 ## VISUALIZE DATA:

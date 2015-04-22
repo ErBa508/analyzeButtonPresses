@@ -36,6 +36,7 @@ if formatType == 1
         if sum(fileRepeat) < 1
             keyData.subjects(1, L + 1).name = filename;
             keyData.subjects(1, L + 1).data = rawData;
+            keyData.subjects(1, L + 1).start = 0;
             save(strcat(out_dir, raw_mat),'keyData');
             index = L + 1; % subject index is length of subjt struct plus 1
         else
@@ -46,6 +47,7 @@ if formatType == 1
     else
         keyData.subjects(1, 1).name = filename;
         keyData.subjects(1, 1).data = rawData;
+        keyData.subjects(1, 1).start = 0;
         save(strcat(out_dir, raw_mat),'keyData');
         index = 1; % subject index is first index in new subjt struct
     end
@@ -71,6 +73,11 @@ elseif formatType == 2
     numFiles = numTrials; % save as numFiles for output to main.m
     index = zeros(numTrials, 1); % so we can retrieve subject # in raw data struct "keyData"
     
+    % Get trial start time
+    sampleData = cat(2, rawData(:,1), rawData(:,5));
+    indm1 = sampleData(:,2) == 8;
+    startTimes = sampleData(indm1,1); 
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Save raw data to mat file %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,6 +100,7 @@ elseif formatType == 2
             if sum(fileRepeat) < 1
                 keyData.subjects(1, L + 1).name = splitData.trial(1,j).name;
                 keyData.subjects(1, L + 1).data = splitData.trial(1,j).data;
+                keyData.subjects(1, L + 1).start = startTimes(j,1);
                 save(strcat(out_dir, raw_mat),'keyData');
                 index(j) = L + 1; % subject index is length of subjt struct plus 1
             else
@@ -105,6 +113,7 @@ elseif formatType == 2
         else
             keyData.subjects(1, 1).name = splitData.trial(1,j).name;
             keyData.subjects(1, 1).data = splitData.trial(1,j).data;
+            keyData.subjects(1, 1).start = startTimes(j,1);
             save(strcat(out_dir, raw_mat),'keyData');
             index(j) = 1; % subject index is first index in new subjt struct
         end

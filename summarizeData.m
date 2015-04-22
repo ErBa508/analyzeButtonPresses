@@ -1,4 +1,4 @@
-function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB, numSwitches] = summarizeData(TS, filename, plot_yn)
+function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB, numSwitches] = summarizeData(TS, filename, plot_yn, startTime)
 
 %keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,9 +73,9 @@ if plot_yn==1
     
     h=figure();
     h1 = subplot(3,1,1);             % plot of 'raw' TC
-    plotTC(h1,timesA_split(:,1:2),Tmax,YvalsA,colorA)
+    plotTC(h1,timesA_split(:,1:2),startTime, Tmax,YvalsA,colorA)
     hold on
-    plotTC(h1,timesB_split(:,1:2),Tmax,YvalsB,colorB)
+    plotTC(h1,timesB_split(:,1:2),startTime, Tmax,YvalsB,colorB)
     
     str = sprintf('Filename is "%s" and # of presses = %d', strrep(filename, '_', ' '), length(timesCat)); %need to take out underscores or formats text as subscript in title
     title(str)

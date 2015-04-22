@@ -86,12 +86,14 @@ for i = 1 : numFiles
             
             selData = keyData.subjects(1,subInd).data; % subjInd is a scalar value
             filename = keyData.subjects(subInd).name;
+            startTime = keyData.subjects(subInd).start;
         
         elseif formatType == 2
             
-            L = subInd(i) - 1; %subInd = vector of trial indices; subtract 1 from index because adding i
+            L = subInd(i) - 1; %subInd = vector of trial indices; subtract 1 from index because adding i in next line
             selData = keyData.subjects(1,L + 1).data;
             filename = keyData.subjects(L + 1).name;
+            startTime = keyData.subjects(L + 1).start;
         end
         
     elseif AnalysisType == 2      
@@ -103,6 +105,7 @@ for i = 1 : numFiles
         clear durA_pre; clear durA_post; clear durB_pre; clear durB_post; clear timeSeriesTC1;
         selData = keyData.subjects(1,i).data;
         filename = keyData.subjects(i).name;
+        startTime = keyData.subjects(i).start;
         
     elseif AnalysisType == 3
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,7 +116,7 @@ for i = 1 : numFiles
         clear durA_post; clear durB_post; clear timeSeriesTC1;
         selData = simData.es(1,i).data;
         filename = simData.es(1,i).name;
-        
+        startTime = 0;
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -127,7 +130,7 @@ for i = 1 : numFiles
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % Summarize gap and overlap data with plots %
-    [gapOverlap_pre, meanGapOverlap_pre, stdGapOverlap_pre, durA_pre, durB_pre, numSwitches_pre] = summarizeData(timeSeriesTC1, filename, plot_yn);
+    [gapOverlap_pre, meanGapOverlap_pre, stdGapOverlap_pre, durA_pre, durB_pre, numSwitches_pre] = summarizeData(timeSeriesTC1, filename, plot_yn, startTime);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Clean-up gaps and overlaps %%%
@@ -141,7 +144,7 @@ for i = 1 : numFiles
     %%% Summarize and visualize time series POST-clean-up %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post, numSwitches_post] = summarizeData(timeSeriesTC1, filename, plot_yn);
+    [gapOverlap_post, meanGapOverlap_post, stdGapOverlap_post, durA_post, durB_post, numSwitches_post] = summarizeData(timeSeriesTC1, filename, plot_yn, startTime);
     
     fprintf('Script paused: press any button to continue\n')
     pause % to view histogram and plot for each subject
@@ -225,7 +228,7 @@ if AnalysisType == 2
         %%%%%%%%%%%%%%%%%
         figure
         hist(groupRes(:,j))
-        str = sprintf('%s for %d subjects with mean of %.2f s/%', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
+        str = sprintf('%s for %d subjects with mean of %.2f s', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
         title(str)
     end
     
