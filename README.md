@@ -23,7 +23,7 @@ experiment.
 - add option to remove 1st epoch in deriveVars.m
 - clean-up plots
 - clean-up gaps 
-- remove dominance durations < 300 ms
+- remove dominance durations < 300 ms; see, 'Plaid-200415_MR_glassesWfilter_manipulatedLambdasB.txt_trial_2'
 - analysis section for group data
 
 # Important files
@@ -90,12 +90,12 @@ new format). Then run main.m.
 	- SUMMARY: raw data is in the format of a column of mouse press/release 
 	events and needs to be converted to continuous time series format. Called by
 	**main.m**.
-	- INPUT: rawData, framerate (#)
+	- INPUT: rawData, framerate (#), endTime(#)
     	- rawData (3 columns)
     		- column 1 = count from 1 : length(column 2)
     		- column 2 = time of left/right button press/release
     		- column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
-	- OUTPUT: timeSeries (3 columns)
+	- OUTPUT: timeSeries (3 columns), endTime(#)
 			- column 1 = time at 120 Hz
 			- column 2 = label of A events; Aon = 1, Aoff = 0
 			- column 3 = label of B events; Bon = 1, Boff = 0
@@ -179,7 +179,8 @@ new format). Then run main.m.
 	percept A and B, (2) the mean dominance durations of press A and B, (3) the reaction 
 	time to the first button press (s), and (4) the rate of button press alternations (s).
 	Called by **main.m**.
-	- INPUT: TS (see TS above), numSwitches (#), domDurA (see durA above), domDurB (durB above)
+	- INPUT: TS (see TS above), numSwitches (#), domDurA (see durA above), domDurB (durB above),
+	FR(#)
 	- OUTPUT: relA (#), relB (#), meanDurA (#), meanDurB (#), RT (#), altRate (#)
 	- (Written by EB)
 

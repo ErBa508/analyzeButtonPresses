@@ -1,12 +1,22 @@
 function [timeSeries, endTime] = genTimeSeries(ES,FR, endTime)
 
  %keyboard
-
- % find time of last button press/release
- timeMaxES = max(ES(:,2)); 
+ 
+ % keep startTime at 0 because we want samples at FR relative to 0
+ startTime = 0;
+ 
+ endTime = round(endTime*FR)/FR;
+ 
+ % set timeMax to endTime value if endTime is not 0
+ if endTime > 0
+      timeMax = endTime; % set end of TS to end of trial
+ % else set end of TS to time of last button press/release event
+ else 
+     timeMax = max(ES(:,2));
+ end
  
  % make new timeSeries vector with resolution of 120 Hz
- timeSeries = (0:1/FR:timeMaxES)'; 
+ timeSeries = (startTime:1/FR:timeMax)'; 
  timeMaxTS = max(timeSeries(:,1));
  
  % add a second column of zeros to new timeSeries vector
