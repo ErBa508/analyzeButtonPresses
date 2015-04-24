@@ -1,4 +1,4 @@
-function [relA, relB, meanDurA, meanDurB, RT, altRate] = deriveVars(TS, numSwitches, domDurA, domDurB, startTime, endTime)
+function [relA, relB, meanDurA, meanDurB, RT, altRate] = deriveVars(TS, numSwitches, domDurA, domDurB, startTime, endTime, FR)
 % Derive new variables from time series data
 % Input: timeseries
 % Output: % time of percept A and B; mean dominance durations of A and B;
@@ -6,9 +6,11 @@ function [relA, relB, meanDurA, meanDurB, RT, altRate] = deriveVars(TS, numSwitc
 
 % TO-DO - currently includes first epoch (1st dominance duration) - make
 % option to not include first epoch
-keyboard
+%keyboard
 
-binStart = find(TS(:,1) == startTime);
+startFrame = round(startTime*FR); % find the frame where trial starts (rounding errors if compare in seconds)
+tsFrames = round(TS(:,1) * FR); % convert time series to frames
+binStart = find(tsFrames(:,1) == startFrame); % find index where startFrame = tsFrame (note tsStart is startFrame + 1)
 binEnd = find(TS(:,1) == endTime);
 
 numFrames = length(TS(binStart:binEnd,2));
@@ -22,8 +24,8 @@ meanDurA = mean(domDurA);
 meanDurB = mean(domDurB);
 
 % Reaction time from stimulus onset (in seconds)
-indA = find(TS(binStart:binEnd,2),1);
-indB = find(TS(binStart:binEnd,3),1);
+indA = find(TS(binStart:binEnd,2),1) + binStart;
+indB = find(TS(binStart:binEnd,3),1) + binStart;
 RT = TS(min(indA, indB), 1)  - startTime; % 1st button press index is used to find RT
 
 % Alternation rate (per minute)

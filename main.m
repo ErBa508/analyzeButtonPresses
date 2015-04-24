@@ -162,7 +162,7 @@ for i = 1 : numFiles
     % duration per percept, 3) reaction time for 1st percept (s), (4)
     % alternation rate (s)
     
-    [percTimeA, percTimeB, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime);
+    [percTimeA, percTimeB, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime, FR);
 
     if AnalysisType == 2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -233,7 +233,7 @@ if AnalysisType == 2
         %%%%%%%%%%%%%%%%%
         figure
         hist(groupRes(:,j))
-        str = sprintf('%s for %d subjects with mean of %.2f s', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
+        str = sprintf('%s for %d trials/subjects with mean of %.2f s', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
         title(str)
     end
     
