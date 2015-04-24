@@ -233,10 +233,19 @@ if AnalysisType == 2
         %%%%%%%%%%%%%%%%%
         figure
         hist(groupRes(:,j))
-        str = sprintf('%s for %d trials/subjects with mean of %.2f s', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
+        if j == 3 || j == 4
+            str = sprintf('%s for %d trials/subjects with mean of %.2f %%', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), 100 * mean(groupRes(:,j)));
+        elseif j == 8
+            str = sprintf('%s for %d trials/subjects with mean of %.2f per minute', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
+        else  
+            str = sprintf('%s for %d trials/subjects with mean of %.2f s', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
+        end
         title(str)
     end
     
+    fprintf('\nTo view subject data: double click the variable named "groupRes"\n')
+    fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"percTimeA"\n (4)"percTimeB" (5)"meanDurA" (6)"meanDurB" (7)"reactionTime" (8)"alternRate"\n')
+    fprintf('\n Each groupRes row represents a new trial or subject')
     %~ 120 ms gap is the mean, ~ 50 is 1 SD : anything > 220 ms is an 'outlier'
 end
 
