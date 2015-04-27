@@ -91,11 +91,11 @@ for i = 1 : numFiles
             
         elseif formatType == 2
             
-            L = subInd(i) - 1; %subInd = vector of trial indices; subtract 1 from index because adding i in next line
-            selData = keyData.subjects(1,L + 1).data;
-            filename = keyData.subjects(L + 1).name;
-            startTime = keyData.subjects(L + 1).start;
-            endTime = keyData.subjects(L + 1).end; % this time is accurate as it has been recorded in the file
+            L = subInd(i); %subInd = vector of trial indices relative to placement in keyData structure
+            selData = keyData.subjects(1,L).data;
+            filename = keyData.subjects(L).name;
+            startTime = keyData.subjects(L).start;
+            endTime = keyData.subjects(L).end; % this time is accurate as it has been recorded in the file
         end
         
     elseif AnalysisType == 2      
@@ -245,7 +245,7 @@ if AnalysisType == 2
     
     fprintf('\nTo view subject data: double click the variable named "groupRes"\n')
     fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"percTimeA"\n (4)"percTimeB" (5)"meanDurA" (6)"meanDurB" (7)"reactionTime" (8)"alternRate"\n')
-    fprintf('\n Each groupRes row represents a new trial or subject')
+    fprintf('\n Each groupRes row represents a new trial or subject\n')
     %~ 120 ms gap is the mean, ~ 50 is 1 SD : anything > 220 ms is an 'outlier'
 end
 

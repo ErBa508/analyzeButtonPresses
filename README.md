@@ -46,7 +46,8 @@ new format). Then run main.m.
 
 - **simTC_wJitter.m** - simulate pseudo-random button press event series
 	- SUMMARY: Simulates pseudo-random event series of alternations between percept 
-	A and B. Percept durations are drawn from a log-normal distribution.
+	A and B. Percept durations are drawn from a log-normal distribution. Called by
+	**main.m**.
 	- INPUT: meanAmsec, stdAmsec, meanBmsec, stdBmsec, meanRT, RTj, N
 		- The average ('mean') and std of percepts A and B are specified independently
 		- meanRT = mean reaction time 
@@ -188,9 +189,12 @@ new format). Then run main.m.
 
 ## VISUALIZE DATA:
 
-- **plotTC.m** - plot time course of button presses (Written by NR)
+- **plotTC.m** - plot time course of button presses 
+	- Called by **summarizeData.m**.
+	- (Written by NR)
 - **histogramPrep.m** - return hist vectors for mouse press durations 
-(Written by EB, adapted from NR)
+	- Called by **summarizeData.m**.
+	- (Written by EB, adapted from NR)
 
 ## ANALYZE DATA:
 
