@@ -39,7 +39,7 @@ timesSort = timesCat(d2,:);
 numSwitches = length(timesCat);
 
 % measure gaps and overlaps
-for i = 1: length(timesSort) - 1 % -1 because # of switches is one less than # of presses
+for i = 1: size(timesSort,1) - 1 % -1 because # of switches is one less than # of presses
     gapOverlap(i,1) = timesSort(i+1,1) - timesSort(i,2); % next press minus previous button release
     gapOverlap(i,2) = timesSort(i+1,3) - timesSort(i,3); % gap between same button? if = +/-2 there is a button switch, if = 0 gap between same button
     
@@ -102,7 +102,7 @@ if plot_yn==1
     tmpmin = min(gapOverlap(:,1));
     tmpmax = max(gapOverlap(:,1));
     
-    if tmpmax == 0 % if no overlaps in event series
+    if tmpmax == 0 || tmpmin == tmpmax % if no overlaps in event series, or if min == max, 
         tmpmax = 0.6; % set arbitrary value for tmax 
     end % this will be used as the max x-axis val in the hist
     
