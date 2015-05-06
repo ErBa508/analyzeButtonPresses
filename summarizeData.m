@@ -36,10 +36,10 @@ timesB_split = cat(2, timesB_split, ones( size(timesB_split,1), 1)*-1 );
 timesCat = cat(1,timesA_split, timesB_split);
 [~, d2] = sort(timesCat(:,1));
 timesSort = timesCat(d2,:);
-numSwitches = length(timesCat);
+numSwitches = size(timesSort,1) - 1; % -1 because # of switches is one less than # of presses
 
 % measure gaps and overlaps
-for i = 1: size(timesSort,1) - 1 % -1 because # of switches is one less than # of presses
+for i = 1: numSwitches 
     gapOverlap(i,1) = timesSort(i+1,1) - timesSort(i,2); % next press minus previous button release
     gapOverlap(i,2) = timesSort(i+1,3) - timesSort(i,3); % gap between same button? if = +/-2 there is a button switch, if = 0 gap between same button
     
