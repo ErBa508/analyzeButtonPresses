@@ -26,8 +26,13 @@ meanDurB = mean(domDurB);
 % Reaction time from stimulus onset (in seconds)
 indA = find(TS(binStart:binEnd,2),1) + binStart;
 indB = find(TS(binStart:binEnd,3),1) + binStart;
-RT = TS(min(indA, indB), 1)  - startTime; % 1st button press index is used to find RT
-
+if isempty(indA)
+    RT = TS(indB,1) - startTime;
+elseif isempty(indB)
+    RT = TS(indA,1) - startTime;
+else
+    RT = TS(min(indA, indB), 1)  - startTime; % 1st button press index is used to find RT
+end
 % Alternation rate (per minute)
 altRate = (numSwitches/TS(numFrames,1))*60;
 
