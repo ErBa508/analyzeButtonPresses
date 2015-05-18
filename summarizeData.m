@@ -1,6 +1,6 @@
 function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB, numSwitches] = summarizeData(TS, filename, plot_yn, startTime)
 
-keyboard
+%keyboard
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Summarize gaps and overlaps %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
