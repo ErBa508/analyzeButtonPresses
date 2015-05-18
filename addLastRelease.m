@@ -6,7 +6,7 @@ len_ES = length(ES(:,1)); % length of Event Series
 
 % Button A
 if (length(vecAon)-length(vecAoff))==1 %end of trial occurred during Aon
-    vecAoff(length(vecAoff)+1, 1) = vecAon(length(vecAon)) + 1;   % add new index to vecAoff
+    vecAoff(length(vecAoff)+1, 1) = len_ES + 1;   % add new index to vecAoff
     % add new row to ES
     ES(len_ES + 1, 1) = len_ES + 1; % add new index to time course column 1
     ES(len_ES + 1, 2) = timeMaxTS; % set last 'press' in column 2 to last frame of time series
@@ -25,7 +25,7 @@ end
 
 % Button B
 if (length(vecBon)-length(vecBoff))==1
-    vecBoff(length(vecBoff)+1, 1)= vecBon(length(vecBon)) + 1; % add new index to vecBoff
+    vecBoff(length(vecBoff)+1, 1)= len_ES + 1; % add new index to vecBoff
     % add new row to ES
     ES(len_ES + 1, 1) = len_ES + 1; % add new index to time course column 1
     ES(len_ES + 1, 2) = timeMaxTS; % set last 'press' in column 2 to last frame of time series
