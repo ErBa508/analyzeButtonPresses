@@ -89,8 +89,8 @@ new format). Then run main.m.
 
 - **genTimeSeries.m** -
 	- SUMMARY: raw data is in the format of a column of mouse press/release 
-	events and needs to be converted to continuous time series format. Called by
-	**main.m**.
+	events and needs to be converted to an evenly sampled time series format. 
+	Called by **main.m**.
 	- INPUT: rawData, framerate (#), endTime(#)
     	- rawData (3 columns)
     		- column 1 = count from 1 : length(column 2)
