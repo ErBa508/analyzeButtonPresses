@@ -1,7 +1,7 @@
 function [numFiles, keyData, index] = selectData( formatType, st_dir, out_dir, raw_mat )
 %selectData This function imports the text or dat raw data files
 
-%keyboard
+% keyboard
 
 %%%%%%%%%%%%%%%%%%%%%%%
 %%% old data format %%%
@@ -68,19 +68,16 @@ elseif formatType == 2
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     [filename, pathname] = uigetfile(st_dir, 'Pick a .txt data file');
-    rawData = importfile(strcat(pathname, filename)); % importfile is a Matlab generated function that generates a matrix (string information dropped)
-    splitData = sepTrials( rawData, filename); % Separate data file into separate trials
-    
-    numTrials = length(splitData.trial);
+    [rawData, splitData, numTrials, index] = importfile(filename); % importfile is a Matlab generated function that generates a set of columns
     numFiles = numTrials; % save as numFiles for output to main.m
-    index = zeros(numTrials, 1); % so we can retrieve subject # in raw data struct "keyData"
-    
+       
     % Get trial start time
-    sampleData = cat(2, rawData(:,1), rawData(:,5));
-    indm1 = sampleData(:,2) == 8;
-    startTimes = sampleData(indm1,1);
-    indm2 = sampleData(:,2) == -8;
-    endTimes = sampleData(indm2,1); %with format 2, we have end of trial information (format 1 we do not)
+    indm1 = rawData(:,5) == 8;
+    startTimes = rawData(indm1,1);
+    indm2 = rawData(:,5) == -8;
+    endTimes = rawData(indm2,1); %with format 2, we have end of trial information (format 1 we do not)
+    
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% Save raw data to mat file %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,6 +100,8 @@ elseif formatType == 2
             if sum(fileRepeat) < 1
                 keyData.subjects(1, L + 1).name = splitData.trial(1,j).name;
                 keyData.subjects(1, L + 1).data = splitData.trial(1,j).data;
+                keyData.subjects(1, L + 1).params = splitData.trial(1,j).params;
+                keyData.subjects(1, L + 1).paramsNames = splitData.trial(1,j).paramsNames;
                 keyData.subjects(1, L + 1).start = startTimes(j,1);
                 keyData.subjects(1, L + 1).end = endTimes(j,1);
                 save(strcat(out_dir, raw_mat),'keyData');
@@ -117,6 +116,8 @@ elseif formatType == 2
         else
             keyData.subjects(1, 1).name = splitData.trial(1,j).name;
             keyData.subjects(1, 1).data = splitData.trial(1,j).data;
+            keyData.subjects(1, 1).params = splitData.trial(1,j).params;
+            keyData.subjects(1, 1).paramsNames = splitData.trial(1,j).paramsNames;
             keyData.subjects(1, 1).start = startTimes(j,1);
             keyData.subjects(1, 1).end = endTimes(j,1);
             save(strcat(out_dir, raw_mat),'keyData');

@@ -96,6 +96,8 @@ for i = 1 : numFiles
             filename = keyData.subjects(L).name;
             startTime = keyData.subjects(L).start;
             endTime = keyData.subjects(L).end; % this time is accurate as it has been recorded in the file
+            params = keyData.subjects(L).params;
+            paramsNames = keyData.subjects(L).paramsNames;
         end
         
     elseif AnalysisType == 2      
@@ -109,6 +111,8 @@ for i = 1 : numFiles
         filename = keyData.subjects(i).name;
         startTime = keyData.subjects(i).start;
         endTime = keyData.subjects(i).end;
+        params = keyData.subjects(i).params;
+        paramsNames = keyData.subjects(i).paramsNames;
         
     elseif AnalysisType == 3
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,7 +166,7 @@ for i = 1 : numFiles
     % duration per percept, 3) reaction time for 1st percept (s), (4)
     % alternation rate (s)
     
-    [percTimeA, percTimeB, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime, FR);
+    [fractA_totalTime, fractB_totalTime, fractA_pressTimeOnly, fractB_pressTimeOnly, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime, FR);
 
     if AnalysisType == 2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,16 +178,12 @@ for i = 1 : numFiles
         keyRes.subjects(1,i).name = filename; %save filename
         keyRes.subjects(1,i).data = timeSeriesTC1; % save time series
         keyRes.subjects(1,i).gap = gapOverlap_post; %save gaps/overlaps values
-        keyRes.subjects(1,i).resLabel = {'meanGapOverlap' 'stdGapOverlap' 'percTimeA' 'percTimeB' 'meanDurA' 'meanDurB' 'RT' 'alternRate'};
-        keyRes.subjects(1,i).results(1) = meanGapOverlap_post; %save single val results in results bin
-        keyRes.subjects(1,i).results(2) = stdGapOverlap_post;
-        keyRes.subjects(1,i).results(3) = percTimeA;
-        keyRes.subjects(1,i).results(4) = percTimeB;
-        keyRes.subjects(1,i).results(5) = meanDurA;
-        keyRes.subjects(1,i).results(6) = meanDurB;
-        keyRes.subjects(1,i).results(7) = RT;
-        keyRes.subjects(1,i).results(8) = alternRate;
+        keyRes.subjects(1,i).resLabel = {'meanGapOverlap' 'stdGapOverlap' 'fractA_totalTime' 'fractB_totalTime' 'fractA_pressTimeOnly' 'fractB_pressTimeOnly' 'meanDurA' 'meanDurB' 'RT' 'alternRate'};
+        keyRes.subjects(1,i).results = [meanGapOverlap_post stdGapOverlap_post fractA_totalTime fractB_totalTime fractA_pressTimeOnly fractB_pressTimeOnly meanDurA meanDurB RT alternRate]; %save single val results in results bin
+        keyRes.subjects(1,i).params = params;
+        keyRes.subjects(1,i).paramsNames = paramsNames;
         save(strcat(out_dir, res_mat),'keyRes');
+        
         
     elseif AnalysisType == 3
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,15 +192,8 @@ for i = 1 : numFiles
         simRes.run(1,i).name = filename; %add filename
         simRes.run(1,i).data = timeSeriesTC1;
         simRes.run(1,i).gap = gapOverlap_post; %add gaps/overlaps values
-        simRes.run(1,i).resLabel = {'meanGapOverlap' 'stdGapOverlap' 'percTimeA' 'percTimeB' 'meanDurA' 'meanDurB' 'RT' 'alternRate'};
-        simRes.run(1,i).results(1) = meanGapOverlap_post; %add single val results in results bin
-        simRes.run(1,i).results(2) = stdGapOverlap_post;
-        simRes.run(1,i).results(3) = percTimeA;
-        simRes.run(1,i).results(4) = percTimeB;
-        simRes.run(1,i).results(5) = meanDurA;
-        simRes.run(1,i).results(6) = meanDurB;
-        simRes.run(1,i).results(7) = RT;
-        simRes.run(1,i).results(8) = alternRate;
+        keyRes.subjects(1,i).resLabel = {'meanGapOverlap' 'stdGapOverlap' 'fractA_totalTime' 'fractB_totalTime' 'fractA_pressTimeOnly' 'fractB_pressTimeOnly' 'meanDurA' 'meanDurB' 'RT' 'alternRate'};
+        keyRes.subjects(1,i).results = [meanGapOverlap_post stdGapOverlap_post fractA_totalTime fractB_totalTime fractA_pressTimeOnly fractB_pressTimeOnly meanDurA meanDurB RT alternRate]; %save single val results in results bin
     end
     
 end
@@ -218,24 +211,33 @@ end
 
 if AnalysisType == 2
     
-    load(strcat(out_dir, res_mat),'keyRes');
+    load(strcat(out_dir, res_mat),'keyRes');  
     
-    for i = 1 : length(keyData.subjects)
+    %THIS ASSUMES THAT PARAMETERS & HEADERS ARE THE SAME FOR ALL SUBJECTS
+    param_index = [11 12 15 21:33]; % which config/trial parameters do we want to pull out?
+    headers_for_output = horzcat(keyRes.subjects(1,1).resLabel, (keyRes.subjects(1,1).paramsNames(param_index))'); 
+    ind = size(keyRes.subjects(1,1).results, 2); 
+    width = size(headers_for_output,2);
+    height = size(keyData.subjects,2);
+    groupRes = zeros(height, width);
+    
+    for i = 1 : size(keyData.subjects,2)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Add results to group matrix %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        groupRes(i,:) = keyRes.subjects(1,i).results; % take the results for each subject and add to a 'Group Results' matrix
+        groupRes(i,:) = horzcat(keyRes.subjects(1,i).results, (keyRes.subjects(1,i).params(param_index))'); % take the results for each subject and add to a 'Group Results' matrix
+%         groupRes(i, (ind+1):end) = ; %add the parameter values for each trial
     end
     
-    for j = 1 : size(groupRes,2)
+    for j = 1 : ind
         %%%%%%%%%%%%%%%%%
         %%% Histogram %%%
         %%%%%%%%%%%%%%%%%
         figure
         hist(groupRes(:,j))
-        if j == 3 || j == 4
+        if j == 3 || j == 4 || j == 5 || j == 6
             str = sprintf('%s for %d trials/subjects with mean of %.2f %%', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), 100 * mean(groupRes(:,j)));
-        elseif j == 8
+        elseif j == 10
             str = sprintf('%s for %d trials/subjects with mean of %.2f per minute', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
         else  
             str = sprintf('%s for %d trials/subjects with mean of %.2f s', keyRes.subjects(1,1).resLabel{1,j}, length(groupRes(:,1)), mean(groupRes(:,j)));
@@ -244,7 +246,7 @@ if AnalysisType == 2
     end
     
     fprintf('\nTo view subject data: double click the variable named "groupRes"\n')
-    fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"percTimeA"\n (4)"percTimeB" (5)"meanDurA" (6)"meanDurB" (7)"reactionTime" (8)"alternRate"\n')
+    fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"percTimeAtotal"\n (4)"percTimeBtotal" (5)"meanDurA" (6)"meanDurB" (7)"reactionTime" (8)"alternRate"\n')
     fprintf('\n Each groupRes row represents a new trial or subject\n')
     %~ 120 ms gap is the mean, ~ 50 is 1 SD : anything > 220 ms is an 'outlier'
 end

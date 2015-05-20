@@ -42,7 +42,28 @@ new format). Then run main.m.
 
 # Supporting functions 
 
-## GENERATE DATA: 
+## GET DATA: 
+
+- **importfile.m** - Import numeric data and string data from a text file as a matrix
+	- INPUT: filename
+	- OUTPUT: Data, splitdata, numTrials, index
+		- Data (7 columns + n columns for n trials)
+			- column 1 = time of left/right button press/release
+    		- column 2 = NaN's
+    		- column 3 = NaN's
+    		- column 4 = similar to column 5; not used
+    		- column 5 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
+    		- column 6 = NaN's
+    		- column 7 = NaN's
+    		- column 8 = Trial 1 list of all configuration and trial parameter values
+    	- splitData (1 x n structure, with n = # trials)
+			- trial 'n' (4 fields; data, name = filename + trial#, params, paramsNames
+				- data (3 columns) - 
+				    - column 1 = count from 1 : length(column 2)
+		    		- column 2 = time of left/right button press/release
+		    		- column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
+				- params (1 column) - list of all configuration and trial parameter values
+				- paramsNames (1 column) - list of all config and trial parameter names
 
 - **simTC_wJitter.m** - simulate pseudo-random button press event series
 	- SUMMARY: Simulates pseudo-random event series of alternations between percept 
@@ -77,14 +98,16 @@ new format). Then run main.m.
 - **sepTrials.m** -
 	- SUMMARY: Raw data in format type #2 has multiple trials in one file. This 
 	function separates the button press data into those multiple trials. Called
-	by the **selectData.m** function.
-	- INPUT: rawData(n x 10 matrix), filename (string)
+	by the **importfile.m** function.
+	- INPUT: rawData(7+ column matrix), filename (string)
 	- OUTPUT: trialData (1 x n structure, with n = # trials)
-		- trial (2 fields; 'data', 'name' = filename + trial#)
-			- data (3 columns)
-				- column 1 = count from 1 : length(column 2)
-    			- column 2 = time of left/right button press/release
-    			- column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
+		- trial 'n' (4 fields; data, name = filename + trial#, params, paramsNames
+			- data (3 columns) - 
+			    - column 1 = count from 1 : length(column 2)
+	    		- column 2 = time of left/right button press/release
+	    		- column 3 = label of event; Aon = 1; Aoff = 2; Bon = -1; Boff = -2
+			- params (1 column) - list of all configuration and trial parameter values
+			- paramsNames (1 column) - list of all config and trial parameter names
    	- (Written by EB)
 
 - **genTimeSeries.m** -
