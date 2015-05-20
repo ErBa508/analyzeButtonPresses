@@ -246,7 +246,7 @@ if AnalysisType == 2
     end
     
     fprintf('\nTo view subject data: double click the variable named "groupRes"\n')
-    fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"percTimeAtotal"\n (4)"percTimeBtotal" (5)"meanDurA" (6)"meanDurB" (7)"reactionTime" (8)"alternRate"\n')
+    fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"fractA_totalTime"\n (4)"fractB_totalTime" (5)"fractA_pressTimeOnly" (6)"fractB_pressTimeOnly" (7)"meanDurA"\n (8)"meanDurB" (9)"reactionTime" (10)"alternRate"\n')
     fprintf('\n Each groupRes row represents a new trial or subject\n')
     %~ 120 ms gap is the mean, ~ 50 is 1 SD : anything > 220 ms is an 'outlier'
 end

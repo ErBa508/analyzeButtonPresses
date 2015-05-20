@@ -1,4 +1,4 @@
-function [relA, relB, meanDurA, meanDurB, RT, altRate] = deriveVars(TS, numSwitches, domDurA, domDurB, startTime, endTime, FR)
+function [relAtotal, relBtotal, relApress, relBpress, meanDurA, meanDurB, RT, altRate] = deriveVars(TS, numSwitches, domDurA, domDurB, startTime, endTime, FR)
 % Derive new variables from time series data
 % Input: timeseries
 % Output: % time of percept A and B; mean dominance durations of A and B;
@@ -6,7 +6,7 @@ function [relA, relB, meanDurA, meanDurB, RT, altRate] = deriveVars(TS, numSwitc
 
 % TO-DO - currently includes first epoch (1st dominance duration) - make
 % option to not include first epoch
-%keyboard
+% keyboard
 
 startFrame = round(startTime*FR); % find the frame where trial starts (rounding errors if compare in seconds)
 tsFrames = round(TS(:,1) * FR); % convert time series to frames
@@ -14,10 +14,16 @@ binStart = find(tsFrames(:,1) == startFrame); % find index where startFrame = ts
 binEnd = find(TS(:,1) == endTime);
 
 numFrames = length(TS(binStart:binEnd,2));
+numAframes = sum(TS(binStart:binEnd,2));
+numBframes = sum(TS(binStart:binEnd,3));
 
-% Relative time of percept A and B
-relA = sum(TS(binStart:binEnd,2))/numFrames;
-relB = sum(TS(binStart:binEnd,3))/numFrames;
+% Relative time of percept A or B relative to total trial time
+relAtotal = numAframes/numFrames;
+relBtotal = numBframes/numFrames;
+
+% Relative time of percept A or B relative to duration when key pressed (A + B)
+relApress = numAframes/(numAframes + numBframes);
+relBpress = numBframes/(numAframes + numBframes);
 
 % Mean dominance duration of each percept
 meanDurA = mean(domDurA);
