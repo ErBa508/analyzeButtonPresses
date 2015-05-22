@@ -67,14 +67,14 @@ elseif formatType == 2
     %%% NwDATAFORMAT: Select data %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    [filename, pathname] = uigetfile(st_dir, 'Pick a .txt data file');
+    [filename, ~] = uigetfile(st_dir, 'Pick a .txt data file');
     [rawData, splitData, numTrials, index] = importfile(filename); % importfile is a Matlab generated function that generates a set of columns
     numFiles = numTrials; % save as numFiles for output to main.m
        
     % Get trial start time
-    indm1 = rawData(:,5) == 8;
+    indm1 = rawData(:,3) == 8;
     startTimes = rawData(indm1,1);
-    indm2 = rawData(:,5) == -8;
+    indm2 = rawData(:,3) == -8;
     endTimes = rawData(indm2,1); %with format 2, we have end of trial information (format 1 we do not)
     
     
