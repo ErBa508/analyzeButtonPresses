@@ -1,4 +1,4 @@
-function [rawNumeric, splitData, numTrials, index ] = importfile(filename)
+function [rawNumeric, splitData, numTrials, index ] = importfile(pathname, filename)
 %IMPORTFILE Import numeric data and string data from a text file as a
 %matrix
 
@@ -8,7 +8,7 @@ function [rawNumeric, splitData, numTrials, index ] = importfile(filename)
 
 %% Get number of columns
 
-fileID = fopen(filename,'r');
+fileID = fopen(strcat(pathname, filename),'r');
 delimiter = char(9); % tab delimiter
 tLines = fgets(fileID); % Read line from file, keeping the newline character
 numCols = numel(strfind(tLines,delimiter))+1; % Find one string within another
@@ -16,7 +16,7 @@ fclose(fileID);
 
 %% Extract data as string
 
-fileID = fopen(filename,'r');
+fileID = fopen(strcat(pathname, filename),'r');
 fmt = repmat('%s', 1, numCols);
 V = textscan(fileID, fmt, 'headerlines', 1, 'delimiter', '\t');
 fclose(fileID);

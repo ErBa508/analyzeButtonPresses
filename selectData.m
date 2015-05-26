@@ -67,8 +67,8 @@ elseif formatType == 2
     %%% NwDATAFORMAT: Select data %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    [filename, ~] = uigetfile(st_dir, 'Pick a .txt data file');
-    [rawData, splitData, numTrials, index] = importfile(filename); % importfile is a Matlab generated function that generates a set of columns
+    [filename, pathname] = uigetfile(st_dir, 'Pick a .txt data file');
+    [rawData, splitData, numTrials, index] = importfile(pathname, filename); % importfile is a Matlab generated function that generates a set of columns
     numFiles = numTrials; % save as numFiles for output to main.m
        
     % Get trial start time
