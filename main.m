@@ -226,7 +226,8 @@ if AnalysisType == 2
         %%% Add results to group matrix %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         groupRes(i,:) = horzcat(keyRes.subjects(1,i).results, (keyRes.subjects(1,i).params(param_index))'); % take the results for each subject and add to a 'Group Results' matrix
-%         groupRes(i, (ind+1):end) = ; %add the parameter values for each trial
+        name(i,1) = cellstr(keyRes.subjects(1,i).name);
+        %         groupRes(i, (ind+1):end) = ; %add the parameter values for each trial
     end
     
     for j = 1 : ind
@@ -245,9 +246,22 @@ if AnalysisType == 2
         title(str)
     end
     
-    fprintf('\nTo view subject data: double click the variable named "groupRes"\n')
-    fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"fractA_totalTime"\n (4)"fractB_totalTime" (5)"fractA_pressTimeOnly" (6)"fractB_pressTimeOnly" (7)"meanDurA"\n (8)"meanDurB" (9)"reactionTime" (10)"alternRate"\n')
-    fprintf('\n Each groupRes row represents a new trial or subject\n')
+    % OUTPUT RESULTS AS CSV FILE
+    
+    if size(headers_for_output,2) == size(groupRes,2)
+        combo = [headers_for_output; num2cell(groupRes)]; % matrix with results and header with labels
+        name_col = vertcat('filename', name); % new column with filenames
+        combo2 = horzcat(name_col, combo); % matrix with results plus filenames
+        cell2csv('keyPress_results.csv', combo2)
+        fprintf('\nTo view subject data: open csv file labeled "keyPress_results"\n')
+        fclose('all');
+    else
+        fprintf('\nThe number of columns for headers and for numeric data are not the same')
+    end
+
+%     fprintf('\nTo view subject data: double click the variable named "groupRes"\n')
+%     fprintf('\nThe headers for groupRes columns are: (1)"meanGap" (2)"standDevGap" (3)"fractA_totalTime"\n (4)"fractB_totalTime" (5)"fractA_pressTimeOnly" (6)"fractB_pressTimeOnly" (7)"meanDurA"\n (8)"meanDurB" (9)"reactionTime" (10)"alternRate"\n')
+%     fprintf('\n Each groupRes row represents a new trial or subject\n')
     %~ 120 ms gap is the mean, ~ 50 is 1 SD : anything > 220 ms is an 'outlier'
 end
 
