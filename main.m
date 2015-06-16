@@ -214,8 +214,9 @@ if AnalysisType == 2
     load(strcat(out_dir, res_mat),'keyRes');  
     
     %THIS ASSUMES THAT PARAMETERS & HEADERS ARE THE SAME FOR ALL SUBJECTS
-    param_index = [11 12 15 21:33]; % which config/trial parameters do we want to pull out?
-    headers_for_output = horzcat(keyRes.subjects(1,1).resLabel, (keyRes.subjects(1,1).paramsNames(param_index))'); 
+%     param_index = [11 12 15 21:33]; % which config/trial parameters do we want to pull out?
+%     headers_for_output = horzcat(keyRes.subjects(1,1).resLabel, (keyRes.subjects(1,1).paramsNames(param_index))'); 
+    headers_for_output = horzcat(keyRes.subjects(1,1).resLabel, (keyRes.subjects(1,1).paramsNames)'); % no param_index, include all parameter variables and values
     ind = size(keyRes.subjects(1,1).results, 2); 
     width = size(headers_for_output,2);
     height = size(keyData.subjects,2);
@@ -225,7 +226,8 @@ if AnalysisType == 2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Add results to group matrix %%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        groupRes(i,:) = horzcat(keyRes.subjects(1,i).results, (keyRes.subjects(1,i).params(param_index))'); % take the results for each subject and add to a 'Group Results' matrix
+%         groupRes(i,:) = horzcat(keyRes.subjects(1,i).results, (keyRes.subjects(1,i).params(param_index))'); % take the results for each subject and add to a 'Group Results' matrix
+        groupRes(i,:) = horzcat(keyRes.subjects(1,i).results, (keyRes.subjects(1,i).params)'); % take the results for each subject and add to a 'Group Results' matrix
         name(i,1) = cellstr(keyRes.subjects(1,i).name);
         %         groupRes(i, (ind+1):end) = ; %add the parameter values for each trial
     end
