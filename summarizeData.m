@@ -5,13 +5,20 @@ function [gapOverlap, meanGapOverlap, stdGapOverlap, durA, durB, numSwitches] = 
 %%% Summarize gaps and overlaps %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% timeSeries column 2 is a column of 1's and 0's for press A. Therefore, we
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Note that this summarizes LEFT and RIGHT mouse presses %%%%%%%%%
+%%% It does not distinguish between GRATING 1 and 2, %%%%%%%%%%%%%%%
+%%% as these gratings may change direction during the experiment.%%%
+%%% GRATING 1 and 2 are compared in DERIVEVARS.m %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% timeSeries column 2 is a column of 1's and 0's for pressing left-button. Therefore, we
 % can compare each cell to the previous cell to look for a switch between 0 
 % and 1 (off and on).
 switchA = (TS(1:end-1,2) + TS(2:end,2)); % cell == 1 is one frame before switch
 indA = find(switchA == 1); % # of indices should be == # of gapOverlap
 timesA = TS(indA+1); % time when button pressed/released; '+ 1' because ind is one frame before switch
-if mod(length(timesA),2) == 1 % if button A was still pressed in last frame, add timestamp of last frame to timesA (for Aoff)
+if mod(length(timesA),2) == 1 % if button A(left) was still pressed in last frame, add timestamp of last frame to timesA (for Aoff)
     timesA(length(timesA)+1,1) =  max(TS(:,1));
 end
 
@@ -28,7 +35,7 @@ timesA_split(:,2) = timesA(2:2:end); % Aoff
 timesB_split(:,1) = timesB(1:2:end); % Bon
 timesB_split(:,2) = timesB(2:2:end); % Boff
 
-% add 3rd column to label button press as A (+1) vs B (-1)
+% add 3rd column to label button press as A(left) (+1) vs B(right) (-1)
 timesA_split = cat(2, timesA_split, ones( size(timesA_split,1), 1) ); 
 timesB_split = cat(2, timesB_split, ones( size(timesB_split,1), 1)*-1 ); 
 
@@ -62,7 +69,7 @@ end
 durA = timesA_split(:,2) - timesA_split(:,1);
 durB = timesB_split(:,2) - timesB_split(:,1);
 
-% account for possibility that button A or B were never pressed
+% account for possibility that button A(left) or B(right) were never pressed
 if isempty(durA)
     durA = 0;
 elseif isempty(durB)
@@ -106,7 +113,7 @@ if plot_yn==1
         bar(bins-shift,histA,0.1*binw,'EdgeColor',colorA,'FaceColor',colorA)
         hold on
         bar(bins+shift,histB,0.1*binw,'EdgeColor',colorB,'FaceColor',colorB)
-        str = sprintf('Dominance durations;\n Bin width %.2f s and bin shift +/- %.2f ', binw, shift(1));
+        str = sprintf('Dominance durations for left and right button presses;\n Bin width %.2f s and bin shift +/- %.2f ', binw, shift(1));
         title(str)
     end
     

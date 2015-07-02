@@ -113,7 +113,7 @@ for i = 1 : numFiles
         endTime = keyData.subjects(i).end;
         params = keyData.subjects(i).params;
         paramsNames = keyData.subjects(i).paramsNames;
-        
+  
     elseif AnalysisType == 3
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% Select simulated data from structure %%%
@@ -162,11 +162,19 @@ for i = 1 : numFiles
     %%% Derive new variables %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % (1) relative dominance duration per percept, (2) mean dominance
-    % duration per percept, 3) reaction time for 1st percept (s), (4)
+    % (1) relative dominance duration per grating, (2) mean dominance
+    % duration per grating, 3) reaction time for 1st percept (s), (4)
     % alternation rate (s)
     
-    [fractA_totalTime, fractB_totalTime, fractA_pressTimeOnly, fractB_pressTimeOnly, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime, FR);
+    % to distinguish button presses for grating 1 vs 2, need to retrieve
+    % velocity which has the direction of motion (e.g., +/-)
+    idx = find(strcmp(paramsNames, 'speed1_deg'));                          %determine in which cell speed for grating 1 is stored 
+    if params(idx) > 0
+        motion_dir = 1;                                                     %if speed is positive, motion direction is positive
+    else
+        motion_dir = -1;                                                    %if speed is negative, motion direction is negative
+    end
+    [fractA_totalTime, fractB_totalTime, fractA_pressTimeOnly, fractB_pressTimeOnly, meanDurA, meanDurB, RT, alternRate] = deriveVars(timeSeriesTC1, numSwitches_post, durA_post, durB_post, startTime, endTime, FR, motion_dir);
 
     if AnalysisType == 2
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
